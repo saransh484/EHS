@@ -103,7 +103,6 @@ async function registerUser(phone, callback) {
     }
 }
 
-
 async function FindUser(params, callback) {
     try {
         const { phone } = params;
@@ -390,7 +389,6 @@ async function verifyMail(params, callback) {
     }
 }
 
-
 async function hospitalBasicDetail(params, callback) {
     const { mail, mobile } = params;
 
@@ -423,7 +421,6 @@ async function hospitalBasicDetail(params, callback) {
         return false;
     }
 }
-
 
 module.exports = { registerUser, FindUser, verifyOTP, addname, registerHospital, findHospital, verifyMobile, verifyMail, hospitalBasicDetail };
 
