@@ -103,6 +103,7 @@ async function registerUser(phone, callback) {
     }
 }
 
+
 async function FindUser(params, callback) {
     try {
         const { phone } = params;
@@ -389,6 +390,7 @@ async function verifyMail(params, callback) {
     }
 }
 
+
 async function hospitalBasicDetail(params, callback) {
     const { mail, mobile } = params;
 
@@ -422,7 +424,41 @@ async function hospitalBasicDetail(params, callback) {
     }
 }
 
-module.exports = { registerUser, FindUser, verifyOTP, addname, registerHospital, findHospital, verifyMobile, verifyMail, hospitalBasicDetail };
+async function hospitalGovernmenttDetails(params, callback) {
+    const { mail, } = params;
+
+    try {
+        console.log
+            (params);
+        // Find the user document by phone number and update the specified key-value pair
+        // const createHospital = new HospitalModel({
+        //     params
+        // });
+
+        const updatedUser = await HospitalModel.findOneAndUpdate(
+            { mail },
+            { $set: params },
+            { new: true }
+        );
+        console.log(
+            updatedUser
+        );
+
+        if (!updatedUser) {
+            console.log("User not found");
+            return "User not found";
+        }
+        console.log("Updated User:", updatedUser);
+        return "updated";
+    } catch (error) {
+        console.error("Error:", error);
+        return false;
+    }
+}
+
+
+
+module.exports = { registerUser, FindUser, verifyOTP, addname, registerHospital, findHospital, verifyMobile, verifyMail, hospitalBasicDetail, hospitalGovernmenttDetails };
 
 
 
