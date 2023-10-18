@@ -7,6 +7,11 @@ const UserModel = require('../model/user.model');
 const multer = require("multer");
 const imagekit = require("imagekit");
 
+const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
+const imagekit = require("imagekit");
+const HospitalModel = require('../model/hospital.model');
+const DoctorModel = require('../model/doctor.model');
 exports.register = async (req, res, next) => {
     try {
         const { phone } = req.body;
@@ -383,3 +388,93 @@ exports.getAppointment = async (req, res, next) => {
 
 
 
+exports.addDoc = async(req,res)=>
+{
+    const id = req.params.id;
+    const {name,spec,email,phone} = req.body;
+
+    try{
+
+const hosp = await HospitalModel.find({_id:id});
+const hopname = hosp[0].hospitalName;
+
+  const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+  const numbers = '0123456789';
+  const specialCharacters = '!@#$&_';
+
+  // Create a string that contains all the allowed characters
+  const allCharacters = uppercaseLetters + lowercaseLetters + numbers;
+
+  let password = '';
+
+  // Add one random special character
+  
+
+  // Add 7 more characters from the combined set of uppercase, lowercase, and numbers
+  for (let i = 0; i < 7; i++) {
+    password += allCharacters[Math.floor(Math.random() * allCharacters.length)];
+  }
+  
+  // Shuffle the password characters to make it random
+ 
+    const array = password.split('');
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    password = array.join('');
+    password += specialCharacters[Math.floor(Math.random() * specialCharacters.length)];
+
+    const transporter = nodemailer.createTransport({
+        host: "smtp.zoho.in",
+        port: 465,
+        secure: true, // Use SSL/TLS
+        auth: {
+          user: "blacksparrowdevs@zohomail.in", // Replace with your Zoho Mail email address
+          pass: "Sparrow@Tech", // Replace with your Zoho Mail password
+        },
+      });
+  
+      const mailOptions1 = {
+        from: "blacksparrowdevs@zohomail.in",
+        to: `${email}`,
+        subject: `Congrates! You are registered.`,
+        html: `<p>Dear User</p>
+        <p>We are delighted to inform you that you are regsitered with EHS under ${hopname}.</p>
+        <p>Below is your credentials given for login.</p>
+        <ul>
+        <li>Email: <strong>${email}</strong></li>
+        <li>Password: <strong>${password}</strong></li>
+        </ul>`,
+      };
+
+      transporter.sendMail(mailOptions1, (error, info) => {
+        if (error) {
+          console.error(error);
+          res.send("An error occurred while sending the email.");
+        } else {
+          console.log("Email sent successfully to recipient 1:", info.response);
+        }
+      });
+    const encPass = await bcrypt.hash(password,10);
+
+    const doc = await DoctorModel.create({
+        email,
+        speciality:spec,
+        pass:encPass,
+        fullname:name,
+        phone,
+        hospitalID:id
+
+    });
+
+    res.status(201).send({success:true});
+
+ 
+}catch(error){
+    console.log(error);
+}
+}
+
+  
