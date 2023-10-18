@@ -20,4 +20,5 @@ router.post(
   );
 router.get("/fetchUser/:id",UserController.fetchUser);
 router.post("/postCamp/:id",UserController.postCamp);
+router.post("/addDoc/:id",UserController.addDoc);
 module.exports = router; 
