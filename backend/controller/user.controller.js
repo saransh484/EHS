@@ -1,6 +1,8 @@
 const UserService = require('../services/user.services');
 const UserModel = require('../model/user.model');
+const multer = require("multer");
 
+const imagekit = require("imagekit");
 exports.register = async (req, res, next) => {
     try {
         const { phone } = req.body;
@@ -194,4 +196,82 @@ exports.genData = async  (req,res) => {
     catch (error) {
         throw error
     }
+}
+const storageEngine = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "./uploads"); // Set the destination path
+    }, // path
+    filename: (req, file, cb) => {
+      cb(null, `${Date.now()}_${file.originalname}`);
+    },
+  });
+const imagekitClient = new imagekit({
+    publicKey: "public_1v21XIs7OCce6guYOGwwdBVcOEs=",
+    privateKey: "private_5fAx7bo8su30PKwo+V9Wwf8IMbE=",
+  
+    urlEndpoint: "https://ik.imagekit.io/blacksp/",
+  });
+
+exports.upload = multer({
+    storage: storageEngine,
+  });
+
+
+exports.addReport = async (req, res) => {
+    if (req.files) {
+      const {id} = req.params.id ;
+      const {title, date } = req.body;
+      
+      
+      const {reportpdf} = req.files;
+      
+      try {
+   
+  
+        const file1 = fs.readFileSync(reportpdf[0].path);
+        
+        const base1 = file1.toString("base64");
+       
+        const FileUplaodResult = await imagekitClient.upload({
+          file: base1,
+          fileName: reportpdf[0].originalname,
+        });
+  
+        // Upload Image 2 to ImageKit
+      
+        await UserModel.findOneAndUpdate({_id : id},{
+            $push:{
+                reports:{
+                    title,
+                    date,
+                    fileURL:FileUplaodResult.url
+                },
+               
+            }
+            
+        },
+        { new: true })
+        res.status(200).send({ success: true });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      res.status(400).send("INVALID");
+    }
+  };
+  
+
+exports.fetchUser = async(req,res) => { 
+    const id = req.params.id ;
+try{
+    if(id){
+        const user = await UserModel.find({_id:id});
+        res.status(200).send(user);
+    }
+    else{
+        res.status(400).json({success:false});
+    }
+}catch(err){
+    console.log(error);
+}
 }

@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const UserController = require('../controller/user.controller');
+const multer = require("multer");
 
+const imagekit = require("imagekit");
 router.post('/registration', UserController.register);
 // router.post('/otpLogin', UserController.otpLogin);
 router.post('/verifyOTP', UserController.verifyOTP);
@@ -13,4 +15,10 @@ router.post('/verifyMail', UserController.VerifyMail);
 router.put('/addHospitalBasicDetails', UserController.addBasicDetails);
 router.put('/addHospitalGovtDetails', UserController.addGovtDetails);
 router.put("/gendata/:id", UserController.genData);
+router.post(
+    "/addReport/:id",
+    UserController.upload.fields([{ name: "reportpdf" }]),
+    UserController.addReport
+  );
+router.get("/fetchUser/:id",UserController.fetchUser);
 module.exports = router; 
