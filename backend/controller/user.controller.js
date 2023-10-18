@@ -1,8 +1,12 @@
 const UserService = require('../services/user.services');
-const HospitalService = require('../services/user.services');
+const HospitalService = require('../services/hospital.services');
+const AppointmentService = require('../services/appointment.services');
+
 const CampModel = require('../model/camps.model');
 const UserModel = require('../model/user.model');
 const multer = require("multer");
+const imagekit = require("imagekit");
+
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const imagekit = require("imagekit");
@@ -204,89 +208,89 @@ exports.genData = async (req, res) => {
 }
 const storageEngine = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, "./uploads"); // Set the destination path
+        cb(null, "./uploads"); // Set the destination path
     }, // path
     filename: (req, file, cb) => {
-      cb(null, `${Date.now()}_${file.originalname}`);
+        cb(null, `${Date.now()}_${file.originalname}`);
     },
-  });
+});
 const imagekitClient = new imagekit({
     publicKey: "public_1v21XIs7OCce6guYOGwwdBVcOEs=",
     privateKey: "private_5fAx7bo8su30PKwo+V9Wwf8IMbE=",
-  
+
     urlEndpoint: "https://ik.imagekit.io/blacksp/",
-  });
+});
 
 exports.upload = multer({
     storage: storageEngine,
-  });
+});
 
 
 exports.addReport = async (req, res) => {
     if (req.files) {
-      const {id} = req.params.id ;
-      const {title, date } = req.body;
-      
-      
-      const {reportpdf} = req.files;
-      
-      try {
-   
-  
-        const file1 = fs.readFileSync(reportpdf[0].path);
-        
-        const base1 = file1.toString("base64");
-       
-        const FileUplaodResult = await imagekitClient.upload({
-          file: base1,
-          fileName: reportpdf[0].originalname,
-        });
-  
-        // Upload Image 2 to ImageKit
-      
-        await UserModel.findOneAndUpdate({_id : id},{
-            $push:{
-                reports:{
-                    title,
-                    date,
-                    fileURL:FileUplaodResult.url
-                },
-               
-            }
-            
-        },
-        { new: true })
-        res.status(200).send({ success: true });
-      } catch (error) {
-        console.log(error);
-      }
+        const { id } = req.params.id;
+        const { title, date } = req.body;
+
+
+        const { reportpdf } = req.files;
+
+        try {
+
+
+            const file1 = fs.readFileSync(reportpdf[0].path);
+
+            const base1 = file1.toString("base64");
+
+            const FileUplaodResult = await imagekitClient.upload({
+                file: base1,
+                fileName: reportpdf[0].originalname,
+            });
+
+            // Upload Image 2 to ImageKit
+
+            await UserModel.findOneAndUpdate({ _id: id }, {
+                $push: {
+                    reports: {
+                        title,
+                        date,
+                        fileURL: FileUplaodResult.url
+                    },
+
+                }
+
+            },
+                { new: true })
+            res.status(200).send({ success: true });
+        } catch (error) {
+            console.log(error);
+        }
     } else {
-      res.status(400).send("INVALID");
+        res.status(400).send("INVALID");
     }
-  };
-  
+};
 
-exports.fetchUser = async(req,res) => { 
-    const id = req.params.id ;
-try{
-    if(id){
-        const user = await UserModel.find({_id:id});
-        res.status(200).send(user);
+
+exports.fetchUser = async (req, res) => {
+    const id = req.params.id;
+    try {
+        if (id) {
+            const user = await UserModel.find({ _id: id });
+            res.status(200).send(user);
+        }
+        else {
+            res.status(400).json({ success: false });
+        }
+    } catch (err) {
+        console.log(error);
     }
-    else{
-        res.status(400).json({success:false});
-    }
-}catch(err){
-    console.log(error);
 }
-}
 
 
-exports.postCamp = async(req,res) => {
+exports.postCamp = async (req, res) => {
     const id = req.params.id;
     console.log(id);
     try {
-        const {age,title,start_date,end_date,boost} = req.body;
+        const { age, title, start_date, end_date, boost } = req.body;
 
         const camp = await CampModel.create({
             title,
@@ -294,18 +298,94 @@ exports.postCamp = async(req,res) => {
             start_date,
             end_date,
             boost,
-            HospitalID:id
+            HospitalID: id
         });
-        res.status(201).send({success:true});
+        res.status(201).send({ success: true });
 
 
 
 
-    }catch(error){
+    } catch (error) {
         console.log(error);
-        res.send({success: false});
+        res.send({ success: false });
     }
 }
+
+
+exports.genIdPwd = async (req, res, next) => {
+    try {
+        const successRes = await HospitalService.generateHospitalIdPwd(req.body);
+        return res.status(200).send({
+            status: true,
+            message: "Success",
+            data: successRes,
+        });
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+
+exports.hospitalLogin = async (req, res, next) => {
+    try {
+        const successRes = await HospitalService.hospitalLogin(req.body);
+        return res.status(200).send({
+            status: true,
+            message: "Success",
+            data: successRes,
+        });
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+
+exports.allHospital = async (req, res, next) => {
+    try {
+        const successRes = await HospitalService.allhospitals(req.body);
+        return res.status(200).send({
+            status: true,
+            message: "Success",
+            data: successRes,
+        });
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+
+exports.bookAppointment = async (req, res, next) => {
+    try {
+        const successRes = await AppointmentService.bookAppointment(req.body);
+        return res.status(200).send({
+            status: true,
+            message: "Success",
+            data: successRes,
+        });
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+
+exports.getAppointment = async (req, res, next) => {
+    try {
+        const successRes = await AppointmentService.getAppointment(req.body);
+        return res.status(200).send({
+            status: true,
+            message: "Success",
+            data: successRes,
+        });
+    }
+    catch (error) {
+        throw error
+    }
+}
+
 
 
 exports.addDoc = async(req,res)=>

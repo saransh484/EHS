@@ -1,11 +1,13 @@
 const UserModel = require('../model/user.model');
+const HospitalModel = require('../model/hospital.model');
+const AppointmentModel = require('../model/hospital.model');
 const otpGenerator = require('otp-generator');
 const crypto = require('crypto');
 const key = 'otp-secret-key';
 const twilio = require('twilio');
 const request = require('request');
 const http = require('https');
-const HospitalModel = require('../model/hospital.model');
+
 const { type } = require('os');
 
 async function registerHospital(params, callback) {
@@ -209,7 +211,7 @@ async function hospitalGovernmenttDetails(params, callback) {
 
 
 async function generateHospitalIdPwd(params, callback) {
-    const { mail, } = params;
+    const { mail } = params;
 
     try {
         console.log
@@ -223,10 +225,18 @@ async function generateHospitalIdPwd(params, callback) {
         const max = 9999999; // 7-digit maximum value
         const randomDigits = Math.floor(Math.random() * (max - min + 1)) + min;
         const hospital_Id = `HID${randomDigits}`;
+        const randompwd = Math.floor(Math.random() * (max - min + 1)) + min;
+        const pwdhash = crypto.createHmac("sha256", key).update(randompwd).digest("hex");
+
 
         const updatedUser = await HospitalModel.findOneAndUpdate(
             { mail },
-            { $set: { ['hid']: hospital_Id } },
+            {
+                $set: {
+                    'hospital_login_cred.hid': hospital_Id,
+                    'hospital_login_cred.pwd': randompwd
+                }
+            },
             { new: true }
         );
         console.log(
@@ -238,7 +248,7 @@ async function generateHospitalIdPwd(params, callback) {
             return "User not found";
         }
         console.log("Updated User:", updatedUser);
-        return "updated";
+        return updatedUser;
     } catch (error) {
         console.error("Error:", error);
         return false;
@@ -246,8 +256,56 @@ async function generateHospitalIdPwd(params, callback) {
 }
 
 
+async function hospitalLogin(params, callback) {
+    const { hid, pwd } = params;
+    // const existuser = await HospitalModel.findOne(
+    //     { hospital_login_cred, hid },
 
-module.exports = { registerHospital, findHospital, verifyMobile, verifyMail, hospitalBasicDetail, hospitalGovernmenttDetails, generateHospitalIdPwd };
+    // );
+    // const existuser = await HospitalModel.findOne({ 'hospital_login_cred.hid': hid });
+    console.log("-----");
+    const existuser = await HospitalModel.findOne({ 'hospital_login_cred.hid': String(hid) });
+    console.log("-----");
+
+    console.log(existuser);
+    if (existuser) {
+        const hash = existuser["hospital_login_cred"]["pwd"];
+        console.log(hash);
+        // let [hashValue, expires] = hash.split('.');
+        // let now = Date.now();
+        // if (now > parseInt(expires)) return "OTP Expired";
+        // let data = `${mail}.${otp}.${expires}`;
+        // let newCalculatedHash = crypto.createHmac("sha256", key).update(data).digest("hex");
+        if (pwd === hash) {
+            // if (true) {
+            return "Success";
+        }
+        else {
+            return "Invalid pwd";
+        }
+    }
+    else {
+        return "notfound"
+    }
+}
+
+
+
+async function allhospitals(params, callback) {
+    try {
+        const hospitals = await HospitalModel.find();
+        console.log(hospitals);
+        return hospitals;
+    } catch (err) {
+        console.error(err);
+        return 'An error occurred while fetching hospitals.'
+        // res.status(500).json({ error: 'An error occurred while fetching hospitals.' });
+    }
+}
+
+
+
+module.exports = { registerHospital, findHospital, verifyMobile, verifyMail, hospitalBasicDetail, hospitalGovernmenttDetails, generateHospitalIdPwd, hospitalLogin, allhospitals };
 
 
 
