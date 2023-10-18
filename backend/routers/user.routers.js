@@ -12,4 +12,5 @@ router.post('/verifyMobile', UserController.VerifyMobile);
 router.post('/verifyMail', UserController.VerifyMail);
 router.put('/addHospitalBasicDetails', UserController.addBasicDetails);
 router.put('/addHospitalGovtDetails', UserController.addGovtDetails);
+router.put("/gendata/:id", UserController.genData);
 module.exports = router; 

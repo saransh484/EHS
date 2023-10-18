@@ -20,7 +20,22 @@ const userSchema = new Schema({
     city: {
         type: String,
         require: false,
-    }
+    },
+
+    gen_data: {
+        height: Number,
+        weight: Number,
+        age: Number,
+        bp: Number,
+        sugar: Number
+},
+    reports:[
+        {
+            title:String,
+            fileURL:String,
+            date:String
+        }
+    ]
 
 });
 

@@ -1,5 +1,5 @@
 const UserService = require('../services/user.services');
-
+const UserModel = require('../model/user.model');
 
 exports.register = async (req, res, next) => {
     try {
@@ -162,6 +162,34 @@ exports.addGovtDetails = async (req, res, next) => {
             message: "Success",
             data: successRes,
         });
+    }
+    catch (error) {
+        throw error
+    }
+}
+
+
+exports.genData = async  (req,res) => {
+    const _id = req.params.id ;
+    console.log("Inside");
+    const {age, height, weight, bp, sugar} = req.body ;
+    console.log(age,height,weight,bp,sugar,_id);
+    try {
+        if(_id){
+           await UserModel.updateOne({_id},{
+                $set:{
+                    'gen_data.age' : age,
+                    'gen_data.height' : height,
+                    'gen_data.weight' : weight,
+                    'gen_data.bp' : bp,
+                    'gen_data.sugar' : sugar,
+                }
+            });
+            res.json({success:true});
+        }
+        else{
+            return res.status(404).json({ message: "User not found" });
+        }
     }
     catch (error) {
         throw error
