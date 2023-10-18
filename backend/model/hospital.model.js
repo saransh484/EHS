@@ -9,7 +9,7 @@ const hospitalSchema = new Schema({
             type: String,
             unique: true
         },
-        password: String
+        pwd: String
     },
 
     mail: {

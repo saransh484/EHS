@@ -14,10 +14,16 @@ router.put('/addHospitalBasicDetails', UserController.addBasicDetails);
 router.put('/addHospitalGovtDetails', UserController.addGovtDetails);
 router.put("/gendata/:id", UserController.genData);
 router.post(
-    "/addReport/:id",
-    UserController.upload.fields([{ name: "reportpdf" }]),
-    UserController.addReport
-  );
-router.get("/fetchUser/:id",UserController.fetchUser);
-router.post("/postCamp/:id",UserController.postCamp);
+  "/addReport/:id",
+  UserController.upload.fields([{ name: "reportpdf" }]),
+  UserController.addReport
+);
+router.get("/fetchUser/:id", UserController.fetchUser);
+router.post("/postCamp/:id", UserController.postCamp);
+router.put('/genIdPwd', UserController.genIdPwd);
+router.put('/hospitalLogin', UserController.hospitalLogin);
+router.get('/fetchhospitals', UserController.allHospital);
+router.post('/bookAppointment', UserController.bookAppointment);
+router.get('/fetchappointment/:hospitalId', UserController.getAppointment);
+
 module.exports = router; 
