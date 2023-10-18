@@ -1,4 +1,6 @@
 const UserService = require('../services/user.services');
+const HospitalService = require('../services/user.services');
+
 const UserModel = require('../model/user.model');
 
 exports.register = async (req, res, next) => {
@@ -69,7 +71,7 @@ exports.FindUser = async (req, res, next) => {
 
 exports.registreHospital = async (req, res, next) => {
     try {
-        const successRes = await UserService.registerHospital(req.body);
+        const successRes = await HospitalService.registerHospital(req.body);
         return res.status(200).send({
             status: true,
             message: "Success",
@@ -83,7 +85,7 @@ exports.registreHospital = async (req, res, next) => {
 
 exports.FindHospital = async (req, res, next) => {
     try {
-        const successRes = await UserService.findHospital(req.body);
+        const successRes = await HospitalService.findHospital(req.body);
         return res.status(200).send({
             status: true,
             message: "Success",
@@ -97,7 +99,7 @@ exports.FindHospital = async (req, res, next) => {
 
 exports.VerifyMobile = async (req, res, next) => {
     try {
-        const successRes = await UserService.verifyMobile(req.body);
+        const successRes = await HospitalService.verifyMobile(req.body);
         return res.status(200).send({
             status: true,
             message: "Success",
@@ -112,7 +114,7 @@ exports.VerifyMobile = async (req, res, next) => {
 
 exports.VerifyMobile = async (req, res, next) => {
     try {
-        const successRes = await UserService.verifyMobile(req.body);
+        const successRes = await HospitalService.verifyMobile(req.body);
         return res.status(200).send({
             status: true,
             message: "Success",
@@ -126,7 +128,7 @@ exports.VerifyMobile = async (req, res, next) => {
 
 exports.VerifyMail = async (req, res, next) => {
     try {
-        const successRes = await UserService.verifyMail(req.body);
+        const successRes = await HospitalService.verifyMail(req.body);
         return res.status(200).send({
             status: true,
             message: "Success",
@@ -141,7 +143,7 @@ exports.VerifyMail = async (req, res, next) => {
 
 exports.addBasicDetails = async (req, res, next) => {
     try {
-        const successRes = await UserService.hospitalBasicDetail(req.body);
+        const successRes = await HospitalService.hospitalBasicDetail(req.body);
         return res.status(200).send({
             status: true,
             message: "Success",
@@ -156,7 +158,7 @@ exports.addBasicDetails = async (req, res, next) => {
 
 exports.addGovtDetails = async (req, res, next) => {
     try {
-        const successRes = await UserService.hospitalGovernmenttDetails(req.body);
+        const successRes = await HospitalService.hospitalGovernmenttDetails(req.body);
         return res.status(200).send({
             status: true,
             message: "Success",
@@ -169,25 +171,25 @@ exports.addGovtDetails = async (req, res, next) => {
 }
 
 
-exports.genData = async  (req,res) => {
-    const _id = req.params.id ;
+exports.genData = async (req, res) => {
+    const _id = req.params.id;
     console.log("Inside");
-    const {age, height, weight, bp, sugar} = req.body ;
-    console.log(age,height,weight,bp,sugar,_id);
+    const { age, height, weight, bp, sugar } = req.body;
+    console.log(age, height, weight, bp, sugar, _id);
     try {
-        if(_id){
-           await UserModel.updateOne({_id},{
-                $set:{
-                    'gen_data.age' : age,
-                    'gen_data.height' : height,
-                    'gen_data.weight' : weight,
-                    'gen_data.bp' : bp,
-                    'gen_data.sugar' : sugar,
+        if (_id) {
+            await UserModel.updateOne({ _id }, {
+                $set: {
+                    'gen_data.age': age,
+                    'gen_data.height': height,
+                    'gen_data.weight': weight,
+                    'gen_data.bp': bp,
+                    'gen_data.sugar': sugar,
                 }
             });
-            res.json({success:true});
+            res.json({ success: true });
         }
-        else{
+        else {
             return res.status(404).json({ message: "User not found" });
         }
     }

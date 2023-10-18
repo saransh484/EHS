@@ -4,6 +4,14 @@ const db = require('../config/db');
 const { Schema } = mongoose;
 
 const hospitalSchema = new Schema({
+    hospital_login_cred: {
+        hid: {
+            type: String,
+            unique: true
+        },
+        password: String
+    },
+
     mail: {
         type: String,
         lowercase: true,
