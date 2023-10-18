@@ -1,6 +1,6 @@
 const UserService = require('../services/user.services');
 const HospitalService = require('../services/user.services');
-
+const CampModel = require('../model/camps.model');
 const UserModel = require('../model/user.model');
 const multer = require("multer");
 
@@ -276,4 +276,30 @@ try{
 }catch(err){
     console.log(error);
 }
+}
+
+
+exports.postCamp = async(req,res) => {
+    const id = req.params.id;
+    console.log(id);
+    try {
+        const {age,title,start_date,end_date,boost} = req.body;
+
+        const camp = await CampModel.create({
+            title,
+            age,
+            start_date,
+            end_date,
+            boost,
+            HospitalID:id
+        });
+        res.status(201).send({success:true});
+
+
+
+
+    }catch(error){
+        console.log(error);
+        res.send({success: false});
+    }
 }

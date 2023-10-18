@@ -1,8 +1,6 @@
 const router = require('express').Router();
 const UserController = require('../controller/user.controller');
-const multer = require("multer");
 
-const imagekit = require("imagekit");
 router.post('/registration', UserController.register);
 // router.post('/otpLogin', UserController.otpLogin);
 router.post('/verifyOTP', UserController.verifyOTP);
@@ -21,4 +19,5 @@ router.post(
     UserController.addReport
   );
 router.get("/fetchUser/:id",UserController.fetchUser);
+router.post("/postCamp/:id",UserController.postCamp);
 module.exports = router; 
