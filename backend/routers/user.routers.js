@@ -34,6 +34,6 @@ router.get('/fetchappointment/:hospitalId', UserController.getAppointment);
 router.get("/fetchUser/:id", UserController.fetchUser);
 router.post("/postCamp/:id", UserController.postCamp);
 router.post("/addDoc/:id", UserController.addDoc);
-router.post("/docLogin",UserController.docLogin);
+
 
 module.exports = router; 
