@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { UserContextImpl } = require('twilio/lib/rest/conversations/v1/user');
 const UserController = require('../controller/user.controller');
 
 router.post('/registration', UserController.register);
@@ -33,4 +34,6 @@ router.get('/fetchappointment/:hospitalId', UserController.getAppointment);
 router.get("/fetchUser/:id", UserController.fetchUser);
 router.post("/postCamp/:id", UserController.postCamp);
 router.post("/addDoc/:id", UserController.addDoc);
+router.post("/docLogin",UserController.docLogin);
+
 module.exports = router; 
