@@ -74,23 +74,23 @@ exports.addName = async (req, res, next) => {
     //     { new: true }
     // );
 
-    const updatedUsr = await UserModel.findOneAndUpdate({phone},
-      {$set : {city : city, name:name, mail:mail}},
-      );
-      
+    const updatedUsr = await UserModel.findOneAndUpdate({ phone },
+      { $set: { city: city, name: name, mail: mail } },
+    );
+
 
     if (!updatedUsr) {
-        console.log("User not found");
-        res.send({already:false})
+      console.log("User not found");
+      res.send({ already: false })
     }
     // Log the updated user document
     console.log("Updated User:", updatedUsr);
     console.log("Key-value pair updated successfully");
-    res.send({success:true,already:true});
-} catch (error) {
+    res.send({ success: true, already: true });
+  } catch (error) {
     console.error("Error:", error);
-    res.send({success:false});
-}
+    res.send({ success: false });
+  }
 };
 
 exports.FindUser = async (req, res, next) => {
@@ -362,6 +362,19 @@ exports.allHospital = async (req, res, next) => {
   }
 };
 
+exports.ShowaAllHospital = async (req, res, next) => {
+  try {
+    const successRes = await HospitalService.showAllHospitals(req.body);
+    return res.status(200).send({
+      status: true,
+      message: "Success",
+      data: successRes,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.bookAppointment = async (req, res, next) => {
   try {
     const successRes = await AppointmentService.bookAppointment(req.body);
@@ -387,6 +400,23 @@ exports.getAppointment = async (req, res, next) => {
     throw error;
   }
 };
+
+
+exports.getUHID = async (req, res, next) => {
+  try {
+    const successRes = await UserService.fetchUHID(req.body);
+    return res.status(200).send({
+      status: true,
+      message: "Success",
+      data: successRes,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
 
 exports.addDoc = async (req, res) => {
   const id = req.params.id;

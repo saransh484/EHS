@@ -33,7 +33,6 @@ async function bookAppointment(params) {
         transaction_data,
         diagnosis_data,
     });
-
     try {
         // Save the appointment record to the database
         const savedAppointment = await newAppointment.save();
@@ -50,9 +49,17 @@ async function getAppointment(params) {
     const { hospitalId } = params;
     try {
         // Query the database to find all appointments with the specified hospital ID
+        // const appointments = await AppointmentModel.find({
+        //     appointment_data.$.hospital_id: hospitalId,
+        // });
+
         const appointments = await AppointmentModel.find({
-            'appointment_data.hospital_id': hospitalId,
+            appointment_data: {
+                hospital_id: hospitalId
+            }
         });
+
+        console.log(appointments);
 
         if (appointments) {
             return appointments;

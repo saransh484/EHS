@@ -24,6 +24,7 @@ router.post("/postCamp/:id", UserController.postCamp);
 router.put('/genIdPwd', UserController.genIdPwd);
 router.put('/hospitalLogin', UserController.hospitalLogin);
 router.get('/fetchhospitals', UserController.allHospital);
+
 router.post('/bookAppointment', UserController.bookAppointment);
 router.get('/fetchappointment/:hospitalId', UserController.getAppointment);
 
@@ -31,9 +32,11 @@ router.get('/fetchappointment/:hospitalId', UserController.getAppointment);
 //   UserController.upload.fields([{ name: "reportpdf" }]),
 //   UserController.addReport
 // );
+
+
 router.get("/fetchUser/:id", UserController.fetchUser);
 router.post("/postCamp/:id", UserController.postCamp);
 router.post("/addDoc/:id", UserController.addDoc);
-
+router.get("/fetchUHID/:id", UserController.getUHID);
 
 module.exports = router; 
