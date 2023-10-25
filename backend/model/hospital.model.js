@@ -11,7 +11,6 @@ const hospitalSchema = new Schema({
         },
         pwd: String
     },
-
     mail: {
         type: String,
         lowercase: true,
@@ -24,7 +23,6 @@ const hospitalSchema = new Schema({
     mobile: {
         type: String,
         unique: true,
-
     },
     mobileHash: {
         type: String
@@ -51,7 +49,7 @@ const hospitalSchema = new Schema({
         type: String,
     },
     features: {
-        type: String,
+        type: [String],
     },
     yearOfEstablishment: {
         type: String,

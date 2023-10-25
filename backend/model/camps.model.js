@@ -9,7 +9,8 @@ const CampsSchema = new Schema({
     start_date:Date,
     end_date:Date,
     boost:Boolean,
-    HospitalID:String
+    HospitalID:String,
+    pin:String
 });
 
 const CampsModel= db.model('camp', CampsSchema);

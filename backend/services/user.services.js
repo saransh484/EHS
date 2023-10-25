@@ -3,6 +3,7 @@ const otpGenerator = require('otp-generator');
 const crypto = require('crypto');
 const key = 'otp-secret-key';
 const twilio = require('twilio');
+const mongoose = require("mongoose");
 const request = require('request');
 const http = require('https');
 const HospitalModel = require('../model/hospital.model');
@@ -229,26 +230,28 @@ async function verifyOTP(params, callback) {
 
 async function addname(params, callback) {
     try {
-        const { phone, name, city } = params;
+        const { phone, name, city, mail } = params;
+        console.log("inside");
         // Find the user document by phone number and update the specified key-value pair
-        const updatedUser = await UserModel.findOneAndUpdate(
-            { phone },
-            { $set: { ["name"]: name, ["city"]: city } },
-            { new: true }
-        );
+        // const updatedUser = await UserModel.findOneAndUpdate(
+        //     { phone },
+        //     { $set: { name,city}},
+        //     { new: true }
+        // );
 
-        const updatedUsr = await UserModel.find(
-            { phone },
-            { $set: { ["name"]: name, ["city"]: city } },
-            { new: true }
-        );
+        const updatedUsr = await UserModel.find({ phone: phone });
 
-        if (!updatedUser) {
+        updatedUsr.name = name;
+        updatedUsr.city = city;
+        updatedUsr.mail = mail;
+        await updatedUsr.save();
+
+        if (!updatedUsr) {
             console.log("User not found");
             return callback("User not found");
         }
         // Log the updated user document
-        console.log("Updated User:", updatedUser);
+        console.log("Updated User:", updatedUsr);
         console.log("Key-value pair updated successfully");
         return callback(null, "Success");
     } catch (error) {
@@ -259,7 +262,35 @@ async function addname(params, callback) {
 
 
 
-module.exports = { registerUser, FindUser, verifyOTP, addname };
+
+async function fetchUHID(params, callback) {
+    try {
+        const { id } = params;
+        // if (!_id) {
+        //     throw new Error("PHONE NUMBER REQUIRED");
+        // }
+        const existuser = await UserModel.findOne(
+            { id },
+        );
+        console.log("updatedUsr");
+        console.log(existuser);
+        // return await createUser.save();
+        // const result = existuser;
+        if (existuser) {
+            const uhid = existuser['_id'];
+            return uhid;
+        }
+        else {
+            return "uhid not found ";
+        }
+
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+module.exports = { registerUser, FindUser, verifyOTP, addname, fetchUHID };
 
 
 
