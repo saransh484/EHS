@@ -1,7 +1,7 @@
 const UserService = require("../services/user.services");
 const HospitalService = require("../services/hospital.services");
 const AppointmentService = require("../services/appointment.services");
-
+const AppointmentModel = require("../model/appointment.model");
 const CampModel = require("../model/camps.model");
 const UserModel = require("../model/user.model");
 const multer = require("multer");
@@ -13,6 +13,7 @@ const nodemailer = require("nodemailer");
 const HospitalModel = require("../model/hospital.model");
 const DoctorModel = require("../model/doctor.model");
 const { NewFactorListInstance } = require("twilio/lib/rest/verify/v2/service/entity/newFactor");
+const CampsModel = require("../model/camps.model");
 exports.register = async (req, res, next) => {
   try {
     const { phone } = req.body;
@@ -306,7 +307,7 @@ exports.postCamp = async (req, res) => {
   const id = req.params.id;
   console.log(id);
   try {
-    const { age, title, start_date, end_date, boost } = req.body;
+    const { age, title, start_date, end_date, boost,pin } = req.body;
 
     const camp = await CampModel.create({
       title,
@@ -315,6 +316,7 @@ exports.postCamp = async (req, res) => {
       end_date,
       boost,
       HospitalID: id,
+      pin
     });
     res.status(201).send({ success: true });
   } catch (error) {
@@ -390,12 +392,22 @@ exports.bookAppointment = async (req, res, next) => {
 
 exports.getAppointment = async (req, res, next) => {
   try {
-    const successRes = await AppointmentService.getAppointment(req.body);
-    return res.status(200).send({
-      status: true,
-      message: "Success",
-      data: successRes,
-    });
+    const hopid = req.params.id;
+
+    const appointments = await AppointmentModel.find({'appointment_data.hospital_id' : hopid});
+    console.log(appointments,hopid);
+        if (appointments) {
+          return res.status(200).send({
+            status: true,
+            message: "Success",
+            data: appointments,
+          });
+        } else {
+            console.log(error);
+            return 'Appointments not found';
+        }
+    
+    
   } catch (error) {
     throw error;
   }
@@ -502,3 +514,30 @@ exports.addDoc = async (req, res) => {
     console.log(error);
   }
 };
+
+exports.getCamps = async(req,res) =>{
+  const pin = req.params.pin;
+ try{
+  const camps = await CampsModel.find({pin:pin});
+  res.status(200).send(camps);
+
+
+ }catch(error){
+  res.send({message:false});
+ }
+  }
+
+
+exports.showAllHospital = async(req,res) =>{
+
+  try {
+    const hospitals= await HospitalModel.find({},{hospital_login_cred:0,mailHash:0,mobileHash:0});
+    console.log("her");
+
+    
+    res.send(hospitals);
+
+  }catch(error){
+    res.send(error);
+  }
+}

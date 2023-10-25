@@ -3,7 +3,7 @@ const otpGenerator = require('otp-generator');
 const crypto = require('crypto');
 const key = 'otp-secret-key';
 const HospitalModel = require('../model/hospital.model');
-const AppointmentModel = require('../model/appointment.model');
+const AppointmentModel = require("../model/appointment.model");
 const { type } = require('os');
 const { error } = require('console');
 
@@ -48,19 +48,9 @@ async function bookAppointment(params) {
 async function getAppointment(params) {
     const { hospitalId } = params;
     try {
+        console.log(params);
         // Query the database to find all appointments with the specified hospital ID
-        // const appointments = await AppointmentModel.find({
-        //     appointment_data.$.hospital_id: hospitalId,
-        // });
-
-        const appointments = await AppointmentModel.find({
-            appointment_data: {
-                hospital_id: hospitalId
-            }
-        });
-
-        console.log(appointments);
-
+     const appointments = await AppointmentModel.find({'appointment_data':{hospital_id:hospitalId}});
         if (appointments) {
             return appointments;
         } else {

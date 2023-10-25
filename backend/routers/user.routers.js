@@ -24,9 +24,10 @@ router.post("/postCamp/:id", UserController.postCamp);
 router.put('/genIdPwd', UserController.genIdPwd);
 router.put('/hospitalLogin', UserController.hospitalLogin);
 router.get('/fetchhospitals', UserController.allHospital);
-
+router.get('/showAllHospital',UserController.showAllHospital);
 router.post('/bookAppointment', UserController.bookAppointment);
-router.get('/fetchappointment/:hospitalId', UserController.getAppointment);
+router.get('/fetchappointment/:id', UserController.getAppointment);
+router.get('/getCamps/:pin',UserController.getCamps);
 
 //   "/addReport/:id",
 //   UserController.upload.fields([{ name: "reportpdf" }]),
