@@ -12,6 +12,7 @@ const nodemailer = require("nodemailer");
 
 const HospitalModel = require("../model/hospital.model");
 const DoctorModel = require("../model/doctor.model");
+const { NewFactorListInstance } = require("twilio/lib/rest/verify/v2/service/entity/newFactor");
 exports.register = async (req, res, next) => {
   try {
     const { phone } = req.body;
@@ -53,16 +54,43 @@ exports.verifyOTP = (req, res, next) => {
   });
 };
 
-exports.addName = (req, res, next) => {
-  UserService.addname(req.body, (error, results) => {
-    if (error) {
-      return next(error);
+exports.addName = async (req, res, next) => {
+  // UserService.addname(req.body, (error, results) => {
+  //   if (error) {
+  //     return next(error);
+  //   }
+  //   return res.status(200).send({
+  //     message: "Success",
+  //     data: results,
+  //   });
+  // });
+  try {
+    const { phone, name, city } = req.body;
+    console.log("inside");
+    // Find the user document by phone number and update the specified key-value pair
+    // const updatedUser = await UserModel.findOneAndUpdate(
+    //     { phone },
+    //     { $set: { name,city}},
+    //     { new: true }
+    // );
+
+    const updatedUsr = await UserModel.findOneAndUpdate({phone},
+      {$set : {city : city, name:name}},
+      );
+      
+
+    if (!updatedUsr) {
+        console.log("User not found");
+        res.send({already:false})
     }
-    return res.status(200).send({
-      message: "Success",
-      data: results,
-    });
-  });
+    // Log the updated user document
+    console.log("Updated User:", updatedUsr);
+    console.log("Key-value pair updated successfully");
+    res.send({success:true,already:true});
+} catch (error) {
+    console.error("Error:", error);
+    res.send({success:false});
+}
 };
 
 exports.FindUser = async (req, res, next) => {
