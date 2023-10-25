@@ -230,7 +230,7 @@ async function verifyOTP(params, callback) {
 
 async function addname(params, callback) {
     try {
-        const { phone, name, city } = params;
+        const { phone, name, city, mail } = params;
         console.log("inside");
         // Find the user document by phone number and update the specified key-value pair
         // const updatedUser = await UserModel.findOneAndUpdate(
@@ -239,14 +239,15 @@ async function addname(params, callback) {
         //     { new: true }
         // );
 
-        const updatedUsr = await UserModel.find({phone: phone});
+        const updatedUsr = await UserModel.find({ phone: phone });
 
         updatedUsr.name = name;
         updatedUsr.city = city;
+        updatedUsr.mail = mail;
 
         await updatedUsr.save();
-        
-            
+
+
 
         if (!updatedUsr) {
             console.log("User not found");

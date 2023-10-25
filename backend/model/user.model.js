@@ -21,6 +21,9 @@ const userSchema = new Schema({
         type: String,
         require: false,
     },
+    mail: {
+        type: String,
+    },
 
     gen_data: {
         height: Number,
@@ -28,12 +31,12 @@ const userSchema = new Schema({
         age: Number,
         bp: Number,
         sugar: Number
-},
-    reports:[
+    },
+    reports: [
         {
-            title:String,
-            fileURL:String,
-            date:String
+            title: String,
+            fileURL: String,
+            date: String
         }
     ]
 

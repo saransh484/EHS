@@ -11,7 +11,7 @@ const http = require('https');
 const { type } = require('os');
 
 async function registerHospital(params, callback) {
-    const { mail, mobile } = params;
+    const { mail, mobile, telephone } = params;
 
     const otp = otpGenerator.generate(4, {
         digits: true,
@@ -54,7 +54,7 @@ async function registerHospital(params, callback) {
             (gendata);
         // Find the user document by phone number and update the specified key-value pair
         const createHospital = new HospitalModel({
-            mail, mobile, ['mailHash']: mailfullHash, ['mobileHash']: fullHash
+            mail, mobile, ['mailHash']: mailfullHash, ['mobileHash']: fullHash, telephone
         });
         console.log("create user HospitalModel ----");
         console.log(createHospital);
@@ -178,7 +178,7 @@ async function hospitalBasicDetail(params, callback) {
 }
 
 async function hospitalGovernmenttDetails(params, callback) {
-    const { mail, } = params;
+    const { mail } = params;
 
     try {
         console.log
