@@ -229,19 +229,19 @@ async function verifyOTP(params, callback) {
 
 async function addname(params, callback) {
     try {
-        const { phone, name, city } = params;
+        const { phone, name, city, mail } = params;
         // Find the user document by phone number and update the specified key-value pair
         const updatedUser = await UserModel.findOneAndUpdate(
             { phone },
-            { $set: { ["name"]: name, ["city"]: city } },
+            { $set: { ["name"]: name, ["city"]: city, ["mail"]: mail } },
             { new: true }
         );
 
-        const updatedUsr = await UserModel.find(
-            { phone },
-            { $set: { ["name"]: name, ["city"]: city } },
-            { new: true }
-        );
+        // const updatedUsr = await UserModel.find(
+        //     { phone },
+        //     { $set: { ["name"]: name, ["city"]: city } },
+        //     { new: true }
+        // );
 
         if (!updatedUser) {
             console.log("User not found");

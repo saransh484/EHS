@@ -15,7 +15,6 @@ function generateUniqueAppointmentId() {
 
     // Combine the timestamp and random number to create the appointment ID
     const appointmentId = `APT${timestamp}${random}`;
-
     return appointmentId;
 }
 
