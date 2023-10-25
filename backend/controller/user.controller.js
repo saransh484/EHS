@@ -65,7 +65,7 @@ exports.addName = async (req, res, next) => {
   //   });
   // });
   try {
-    const { phone, name, city } = req.body;
+    const { phone, name, city, mail } = req.body;
     console.log("inside");
     // Find the user document by phone number and update the specified key-value pair
     // const updatedUser = await UserModel.findOneAndUpdate(
@@ -75,7 +75,7 @@ exports.addName = async (req, res, next) => {
     // );
 
     const updatedUsr = await UserModel.findOneAndUpdate({phone},
-      {$set : {city : city, name:name}},
+      {$set : {city : city, name:name, mail:mail}},
       );
       
 
