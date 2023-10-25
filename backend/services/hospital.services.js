@@ -228,13 +228,9 @@ async function generateHospitalIdPwd(params, callback) {
         const randompwd = Math.floor(Math.random() * (max - min + 1)) + min;
         // const pwdhash = crypto.createHmac("sha256", key).update(randompwd).digest("hex");
 
-        console.log(mail);
-        console.log(hospital_Id);
-        console.log(randompwd);
-
 
         const updatedUser = await HospitalModel.findOneAndUpdate(
-            { mail },
+            { mail: mail },
             {
                 $set: {
                     'hospital_login_cred.hid': hospital_Id,
@@ -246,16 +242,15 @@ async function generateHospitalIdPwd(params, callback) {
         console.log(
             updatedUser
         );
-
         if (!updatedUser) {
             console.log("User not found");
-            return "User not found";
+            return {data:false}
         }
         console.log("Updated User:", updatedUser);
         return updatedUser;
     } catch (error) {
         console.error("Error:", error);
-        return false;
+        return {error:true}
     }
 }
 
