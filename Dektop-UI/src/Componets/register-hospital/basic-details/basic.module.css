@@ -27,32 +27,46 @@
     gap: 9.5%;
 }
 
-.sub-title{
+.sub_title{
     display: flex;
     color: #2A2B3F;
     font-size: 30px;
-    margin: 50px 0 0 100px;
+    margin-left: 5rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    justify-content: flex-start;
+}
+.add{
+    margin-top: 3rem;
+    margin-left: 5rem;
+    display: flex;
+    color: #2A2B3F;
+    font-size: 30px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
     justify-content: flex-start;
 }
 
-.inp-fields{
+.inp_fields{
     display: flex;
     flex-direction: row;
+    justify-content: space-evenly;
 }
 
-.inp-fields div{
+.inp_fields div{
     display: flex;
     flex-direction: column;
 }
 
-.semi-input label{
+
+.semi_input label{
+    margin-top: 1rem;
     margin-bottom: 2rem;
 }
 
-.inp-fields input{
+.inp_fields input{
     width: 340px;
     height: 50px;
     padding: 0 10px ;
@@ -62,13 +76,13 @@
     box-shadow: 0px 2px 8px -3px rgba(0, 0, 0, 0.25);
 }
 
-.button-saveCont{
+.button_saveCont{
     display: flex;
     justify-content: center;
     margin-top: 6rem;
 }
 
-.button-saveCont button{
+.button_saveCont button{
     cursor: pointer;
     border: none;
     border-radius: 9px;
@@ -79,4 +93,18 @@
     background-color: #E55771;
     color: white;
     font-weight: bold;
+}
+
+select{
+    width: 340px;
+    height: 50px;
+    padding: 0 10px ;
+    border: none;
+    border-radius: 9px;
+    background: #FFF;
+    box-shadow: 0px 2px 8px -3px rgba(0, 0, 0, 0.25);
+}
+
+.selection:focus option:first-of-type {
+    display: none;
 }
