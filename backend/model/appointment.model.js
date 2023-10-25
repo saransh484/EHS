@@ -23,6 +23,7 @@ const appointmentSchema = new Schema({
         doctor_id: String,
         health_issue: String,
     },
+    
 
     transaction_data: {
         booked_on: Date,

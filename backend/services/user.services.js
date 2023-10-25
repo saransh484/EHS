@@ -244,10 +244,7 @@ async function addname(params, callback) {
         updatedUsr.name = name;
         updatedUsr.city = city;
         updatedUsr.mail = mail;
-
         await updatedUsr.save();
-
-
 
         if (!updatedUsr) {
             console.log("User not found");
@@ -265,7 +262,35 @@ async function addname(params, callback) {
 
 
 
-module.exports = { registerUser, FindUser, verifyOTP, addname };
+
+async function fetchUHID(params, callback) {
+    try {
+        const { id } = params;
+        // if (!_id) {
+        //     throw new Error("PHONE NUMBER REQUIRED");
+        // }
+        const existuser = await UserModel.findOne(
+            { id },
+        );
+        console.log("updatedUsr");
+        console.log(existuser);
+        // return await createUser.save();
+        // const result = existuser;
+        if (existuser) {
+            const uhid = existuser['_id'];
+            return uhid;
+        }
+        else {
+            return "uhid not found ";
+        }
+
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+module.exports = { registerUser, FindUser, verifyOTP, addname, fetchUHID };
 
 
 

@@ -221,36 +221,42 @@ async function generateHospitalIdPwd(params, callback) {
         //     params
         // });
 
-        const min = 1000000; // 7-digit minimum value
-        const max = 9999999; // 7-digit maximum value
-        const randomDigits = Math.floor(Math.random() * (max - min + 1)) + min;
-        const hospital_Id = `HID${randomDigits}`;
-        const randompwd = Math.floor(Math.random() * (max - min + 1)) + min;
-        // const pwdhash = crypto.createHmac("sha256", key).update(randompwd).digest("hex");
-
-
-        const updatedUser = await HospitalModel.findOneAndUpdate(
-            { mail: mail },
-            {
-                $set: {
-                    'hospital_login_cred.hid': hospital_Id,
-                    'hospital_login_cred.pwd': randompwd
-                }
-            },
-            { new: true }
-        );
+        do {
+            const min = 1000000; // 7-digit minimum value
+            const max = 9999999; // 7-digit maximum value
+            const randomDigits = Math.floor(Math.random() * (max - min + 1)) + min;
+            const hospital_Id = `HID${randomDigits}`;
+            const randompwd = Math.floor(Math.random() * (max - min + 1)) + min;
+            // const pwdhash = crypto.createHmac("sha256", key).update(randompwd).digest("hex");
+            const IdExist = await HospitalModel.find({
+                'hospital_login_cred.hid'
+                    : hospital_Id
+            });
+            if (!IdExist) {
+                const updatedUser = await HospitalModel.findOneAndUpdate(
+                    { mail: mail },
+                    {
+                        $set: {
+                            'hospital_login_cred.hid': hospital_Id,
+                            'hospital_login_cred.pwd': randompwd
+                        }
+                    },
+                    { new: true }
+                );
+            }
+        } while (IdExist);
         console.log(
             updatedUser
         );
         if (!updatedUser) {
             console.log("User not found");
-            return {data:false}
+            return { data: false }
         }
         console.log("Updated User:", updatedUser);
         return updatedUser;
     } catch (error) {
         console.error("Error:", error);
-        return {error:true}
+        return { error: true }
     }
 }
 
@@ -280,15 +286,13 @@ async function hospitalLogin(params, callback) {
             return "Success";
         }
         else {
-            return "Invalid pwd";
+            return "Invalid ID or PWD";
         }
     }
     else {
         return "notfound"
     }
 }
-
-
 
 async function allhospitals(params, callback) {
     try {
@@ -303,6 +307,17 @@ async function allhospitals(params, callback) {
 }
 
 
+async function allhospitals(params, callback) {
+    try {
+        const hospitals = await HospitalModel.find();
+        console.log(hospitals);
+        return hospitals;
+    } catch (err) {
+        console.error(err);
+        return 'An error occurred while fetching hospitals.'
+        // res.status(500).json({ error: 'An error occurred while fetching hospitals.' });
+    }
+}
 
 module.exports = { registerHospital, findHospital, verifyMobile, verifyMail, hospitalBasicDetail, hospitalGovernmenttDetails, generateHospitalIdPwd, hospitalLogin, allhospitals };
 
