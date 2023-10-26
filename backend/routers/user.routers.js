@@ -28,6 +28,7 @@ router.get('/showAllHospital',UserController.showAllHospital);
 router.post('/bookAppointment', UserController.bookAppointment);
 router.get('/fetchappointment/:id', UserController.getAppointment);
 router.get('/getCamps/:pin',UserController.getCamps);
+router.post('/postAppointment/:id',UserController.postAppointment);
 
 //   "/addReport/:id",
 //   UserController.upload.fields([{ name: "reportpdf" }]),

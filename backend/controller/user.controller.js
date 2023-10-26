@@ -541,3 +541,27 @@ exports.showAllHospital = async(req,res) =>{
     res.send(error);
   }
 }
+
+
+
+
+
+
+exports.postAppointment = async(req,res) =>{
+  const id = req.params.id;
+  const {date,health_issue,time} = req.body;
+
+  try{
+    const app = await AppointmentModel.create({
+      appointment_data:{
+        hospital_id:id,
+        date:date,
+        health_issue:health_issue
+
+      }
+})
+res.status(201).send({success:true});
+  }catch(error){
+    res.send({success:false});
+  }
+}
