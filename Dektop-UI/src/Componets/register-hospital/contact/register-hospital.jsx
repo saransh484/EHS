@@ -6,11 +6,25 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import {connect} from "react-redux";
 import {updateFormField} from "../../../redux-stuff/form_action.js";
 import {Link} from "react-router-dom";
-
+import axios from "axios";
 library.add(faCircle)
 
 
 function Hospital_reg({email, tel_no, mob_no, updateFormField}) {
+
+    const submitThis = async (e) => {
+        e.preventDefault();
+
+        const info = {phone:mob_no}
+        
+        try {
+            const response = await axios.post('https://ehs-q3hx.onrender.com/api/registration',info);
+            console.log(response.data)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     return <>
 
     <div>
@@ -58,9 +72,9 @@ function Hospital_reg({email, tel_no, mob_no, updateFormField}) {
         </div>
 
         <div className={s.button_saveCont}>
-            <Link to={"/reg_basic_detail"}>
-                <button>Save and Continue</button>
-            </Link>
+            {/*<Link to={"/reg_basic_detail"}>*/}
+                <button onClick={submitThis} >Save and Continue</button>
+            {/*</Link>?*/}
         </div>
 
     </div>
