@@ -23,8 +23,17 @@ function Admin_signup() {
         } catch (error) {
             console.error(error)
         }
-
     }
+
+    const verifyPhone = async () => {
+        try {
+            const response = await axios.get('https://ehs-q3hx.onrender.com/api/verifyOTP'); // Replace with your API endpoint
+            console.log(response);
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
     
     return (
         <>
@@ -44,7 +53,7 @@ function Admin_signup() {
                     
                     </div>
                     <div className='inp-child'>  
-                        <button type="" >Verify Mobile</button>
+                        <button type="" onClick={verifyPhone} >Verify Mobile</button>
                     </div>
                 </div>
                 
