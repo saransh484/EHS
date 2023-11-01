@@ -10,9 +10,8 @@ const http = require('https');
 
 const { type } = require('os');
 
-async function registerHospital(params, callback) {
-    const { mail, mobile, telephone } = params;
 
+function genotp(otpTo) {
     const otp = otpGenerator.generate(4, {
         digits: true,
         // alphabets: false,    
@@ -23,47 +22,104 @@ async function registerHospital(params, callback) {
     });
     const ttl = 10 * 60 * 1000;
     const expires = Date.now() + ttl;
-    const data = `${mobile}.${otp}.${expires}`;
+    const data = `${otpTo}.${otp}.${expires}`;
     const hash = crypto.createHmac("sha256", key).update(data).digest("hex");
     const fullHash = `${hash}.${expires}`;
     console.log(`your otp is ${otp}`);
+    const otpmap = {
+        "otp": otp,
+        "hash": fullHash
+    };
+    return otpmap;
+}
 
-    //------------mail otp
-    const mailotp = otpGenerator.generate(4, {
-        digits: true,
-        // alphabets: false,    
-        // upperCase: false,
-        upperCaseAlphabets: false,
-        lowerCaseAlphabets: false,
-        specialChars: false
-    }); mail
-    const mailttl = 10 * 60 * 1000;
-    const mailexpires = Date.now() + mailttl;
-    const maildata = `${mail}.${mailotp}.${mailexpires}`;
-    const mailhash = crypto.createHmac("sha256", key).update(maildata).digest("hex");
-    const mailfullHash = `${mailhash}.${mailexpires}`;
-    console.log(`your otp is ${mailotp}`);
+async function registerHospital(params, callback) {
+    const { mail, mobile, telephone } = params;
+
+    mobileOtpMap = genotp(mobile);
+    mobileOtp = mobileOtpMap['otp'];
+    mobileFullHash = mobileOtpMap['hash'];
+    console.log(`your Mobile otp is ${mobileOtp}`);
+
+    mailOtpMap = genotp(mail);
+    mailOtp = mailOtpMap['otp'];
+    mailFullHash = mailOtpMap['hash'];
+    console.log(`your mail otp is ${mailOtp}`);
+
     gendata = {
-        "mailhash": mailfullHash,
-        "mobileHash": fullHash
+        "mobileHash": mobileFullHash,
+        "mailhash": mailFullHash
     }
     try {
+        let IdExist;
+        let hospital_Id;
+        //------------genrate hospital ID-----
+        do {
+            const min = 1000000; // 7-digit minimum value
+            const max = 9999999; // 7-digit maximum value
+            const randomDigits = Math.floor(Math.random() * (max - min + 1)) + min;
+            hospital_Id = `HID${randomDigits}`;
+            // const randompwd = Math.floor(Math.random() * (max - min + 1)) + min;
+            // const pwdhash = crypto.createHmac("sha256", key).update(randompwd).digest("hex");
+            IdExist = await HospitalModel.find({
+                'hospital_login_cred.hid'
+                    : hospital_Id
+            });
+            console.log(IdExist);
+            if (IdExist.length == 0) {
+                const createHospital = new HospitalModel({
+                    'hospital_login_cred.hid': hospital_Id
+                });
+                const ret = await createHospital.save();
+                console.log(ret);
+
+                // const updatedUser = await HospitalModel.findOneAndUpdate(
+                //     { 'contact_data.mail': mail },
+                //     {
+                //         $set: {
+                //             'hospital_login_cred.hid': hospital_Id,
+                //         }
+                //     },
+                //     { new: true }
+                // );
+            }
+        } while (IdExist.length > 0);
+
         console.log
             (mail);
         console.log
             (gendata);
+        const contact_data = {
+            'mail': mail,
+            'mobile': mobile,
+            'mailHash': mailFullHash,
+            'mobileHash': mobileFullHash,
+            'telephone': telephone
+        }
+
+        const updatedUser = await HospitalModel.findOneAndUpdate(
+            { 'hospital_login_cred.hid': hospital_Id },
+            {
+                $set: {
+                    contact_data
+                }
+            },
+            { new: true }
+        );
+
         // Find the user document by phone number and update the specified key-value pair
-        const createHospital = new HospitalModel({
-            mail, mobile, ['mailHash']: mailfullHash, ['mobileHash']: fullHash, telephone
-        });
+        // const createHospital = new HospitalModel({
+        //     // mail, mobile, ['mailHash']: mailfullHash, ['mobileHash']: fullHash, telephone
+        //     contact_data
+        // });
         console.log("create user HospitalModel ----");
-        console.log(createHospital);
-        const ret = await createHospital.save();
-        console.log("before" + ret);
-        ret['mobileotp'] = otp;
-        ret['mailotp'] = mailotp;
-        console.log("after" + ret);
-        return ret;
+        // console.log(createHospital);
+        // const ret = await createHospital.save();
+        console.log("before" + updatedUser);
+        updatedUser['mobileotp'] = mobileOtp;
+        updatedUser['mailotp'] = mailOtp;
+        console.log("after" + updatedUser);
+        return updatedUser;
     } catch (error) {
         console.error("Error:", error);
         return false;
@@ -120,7 +176,7 @@ async function verifyMobile(params, callback) {
 async function verifyMail(params, callback) {
     const { mail, otp } = params;
     const existuser = await HospitalModel.findOne(
-        { mail },
+        { 'contact_data': { mail: mail } },
     );
     console.log(existuser);
     if (existuser) {
