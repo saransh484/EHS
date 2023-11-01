@@ -11,86 +11,140 @@ const hospitalSchema = new Schema({
         },
         pwd: String
     },
-    mail: {
-        type: String,
-        lowercase: true,
-        require: true,
-        unique: true,
-    },
-    mailHash: {
-        type: String,
-    },
-    mobile: {
-        type: String,
-        unique: true,
-    },
-    mobileHash: {
-        type: String
-    },
-    hospitalName: {
-        type: String,
-    },
-    ownership: {
-        type: String,
-    },
-    staffSize: {
-        type: String,
-    },
-    city: {
-        type: String,
-    },
-    state: {
-        type: String,
-    },
-    pinCode: {
-        type: String,
-    },
-    type: {
-        type: String,
-    },
-    features: {
-        type: [String],
-    },
-    yearOfEstablishment: {
-        type: String,
-    },
-    haveLabs: {
-        type: String,
-    },
-    PathologyLicense: {
-        type: String,
-    },
-    allowAppointment: {
-        type: String,
-    },
-    address1: {
-        type: String,
-    },
-    address2: {
-        type: String,
-    },
-    address3: {
-        type: String,
-    },
-    telephone: {
-        type: String,
+    contact_data: {
+        mail: {
+            type: String,
+            lowercase: true,
+            require: true,
+            unique: true,
+        },
+        mobile: {
+            type: String,
+            unique: true,
+        },
+        telephone: {
+            type: String,
+        },
+
+        mailHash: String,
+        mobileHash: String,
+        mobileotp: String,
+        mailotp: String,
+
     },
 
-    Tan: {
+    general_data: {
+        hospitalName: String,
+        ownership: String,
+        staffSize: String,
+        city: String,
+        state: String,
+        pinCode: String,
         type: String,
+        features: {
+            type: [String],
+        },
+        yearOfEstablishment: String,
+        haveLabs: String,
+        PathologyLicense: String,
+        allowAppointment: String,
     },
-    Pan: {
-        type: String,
+    address_data: {
+        address1: String,
+        address2: String,
+        address3: String,
     },
-    hospitalLicense: {
-        type: String,
+
+    govt_data: {
+        Tan: String,
+        Pan: String,
+        hospitalLicense: String,
     },
-    mobileotp: {
-        type: String,
-    },
-    mailotp: {
-        type: String,
-    },
+
+
+
+
+
+    // mail: {
+    //     type: String,
+    //     lowercase: true,
+    //     require: true,
+    //     unique: true,
+    // },
+    // mailHash: {
+    //     type: String,
+    // },
+    // mobile: {
+    //     type: String,
+    //     unique: true,
+    // },
+    // mobileHash: {
+    //     type: String
+    // },
+    // hospitalName: {
+    //     type: String,
+    // },
+    // ownership: {
+    //     type: String,
+    // },
+    // staffSize: {
+    //     type: String,
+    // },
+    // city: {
+    //     type: String,
+    // },
+    // state: {
+    //     type: String,
+    // },
+    // pinCode: {
+    //     type: String,
+    // },
+    // type: {
+    //     type: String,
+    // },
+    // features: {
+    //     type: [String],
+    // },
+    // yearOfEstablishment: {
+    //     type: String,
+    // },
+    // haveLabs: {
+    //     type: String,
+    // },
+    // PathologyLicense: {
+    //     type: String,
+    // },
+    // allowAppointment: {
+    //     type: String,
+    // },
+    // address1: {
+    //     type: String,
+    // },
+    // address2: {
+    //     type: String,
+    // },
+    // address3: {
+    //     type: String,
+    // },
+    // telephone: {
+    //     type: String,
+    // },
+
+    // Tan: {
+    //     type: String,
+    // },
+    // Pan: {
+    //     type: String,
+    // },
+    // hospitalLicense: {
+    //     type: String,
+    // },
+    // mobileotp: {
+    //     type: String,
+    // },
+    // mailotp: {
+    //     type: String,
+    // },
 });
 
 const HospitalModel = db.model('hospital', hospitalSchema);
