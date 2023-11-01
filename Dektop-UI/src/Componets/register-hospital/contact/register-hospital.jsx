@@ -25,6 +25,8 @@ function Hospital_reg({email, tel_no, mob_no, updateFormField}) {
         }
     }
 
+    
+    
     return <>
 
     <div>
@@ -72,9 +74,9 @@ function Hospital_reg({email, tel_no, mob_no, updateFormField}) {
         </div>
 
         <div className={s.button_saveCont}>
-            {/*<Link to={"/reg_basic_detail"}>*/}
-                <button onClick={submitThis} >Save and Continue</button>
-            {/*</Link>?*/}
+            <Link to={"/reg_basic_detail"}>
+                <button /*onClick={submitThis}*/ >Save and Continue</button>
+            </Link>?
         </div>
 
     </div>

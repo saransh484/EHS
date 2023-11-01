@@ -12,11 +12,11 @@ function Admin_login() {
     const submitThis = async (e) => {
         e.preventDefault();
 
-        const info = {email:hospital_id, pass:password}
+        const info = {hid:hospital_id, pwd:password}
         setDataIn([info])
         
         try {
-            const response = await axios.post('/api/signup',info);
+            const response = await axios.put('https://ehs-q3hx.onrender.com/api/hospitalLogin',info);
             console.log(response.data) 
         } catch (error) {
             console.error(error)

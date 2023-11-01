@@ -1,0 +1,30 @@
+.side{
+    background: white;
+    border-radius: 15px;
+}
+
+.side_main{
+    display: flex;
+    flex-direction: column;
+    margin-top: 6rem;
+    justify-content: flex-start;
+}
+
+.chhotu{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    padding: 1rem;
+}
+
+.chhotu span{
+    margin-left: 1rem;
+}
+
+.logo_name{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+}
