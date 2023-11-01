@@ -307,7 +307,7 @@ exports.postCamp = async (req, res) => {
   const id = req.params.id;
   console.log(id);
   try {
-    const { age, title, start_date, end_date, boost,pin } = req.body;
+    const { age, title, start_date, end_date, boost, pin } = req.body;
 
     const camp = await CampModel.create({
       title,
@@ -394,20 +394,20 @@ exports.getAppointment = async (req, res, next) => {
   try {
     const hopid = req.params.id;
 
-    const appointments = await AppointmentModel.find({'appointment_data.hospital_id' : hopid});
-    console.log(appointments,hopid);
-        if (appointments) {
-          return res.status(200).send({
-            status: true,
-            message: "Success",
-            data: appointments,
-          });
-        } else {
-            console.log(error);
-            return 'Appointments not found';
-        }
-    
-    
+    const appointments = await AppointmentModel.find({ 'appointment_data.hospital_id': hopid });
+    console.log(appointments, hopid);
+    if (appointments) {
+      return res.status(200).send({
+        status: true,
+        message: "Success",
+        data: appointments,
+      });
+    } else {
+      console.log(error);
+      return 'Appointments not found';
+    }
+
+
   } catch (error) {
     throw error;
   }
@@ -515,29 +515,29 @@ exports.addDoc = async (req, res) => {
   }
 };
 
-exports.getCamps = async(req,res) =>{
+exports.getCamps = async (req, res) => {
   const pin = req.params.pin;
- try{
-  const camps = await CampsModel.find({pin:pin});
-  res.status(200).send(camps);
+  try {
+    const camps = await CampsModel.find({ pin: pin });
+    res.status(200).send(camps);
 
 
- }catch(error){
-  res.send({message:false});
- }
+  } catch (error) {
+    res.send({ message: false });
   }
+}
 
 
-exports.showAllHospital = async(req,res) =>{
+exports.showAllHospital = async (req, res) => {
 
   try {
-    const hospitals= await HospitalModel.find({},{hospital_login_cred:0,mailHash:0,mobileHash:0});
+    const hospitals = await HospitalModel.find({}, { hospital_login_cred: 0, mailHash: 0, mobileHash: 0 });
     console.log("her");
 
-    
+
     res.send(hospitals);
 
-  }catch(error){
+  } catch (error) {
     res.send(error);
   }
 }
@@ -547,21 +547,21 @@ exports.showAllHospital = async(req,res) =>{
 
 
 
-exports.postAppointment = async(req,res) =>{
+exports.postAppointment = async (req, res) => {
   const id = req.params.id;
-  const {date,health_issue,time} = req.body;
+  const { date, health_issue, time } = req.body;
 
-  try{
+  try {
     const app = await AppointmentModel.create({
-      appointment_data:{
-        hospital_id:id,
-        date:date,
-        health_issue:health_issue
+      appointment_data: {
+        hospital_id: id,
+        date: date,
+        health_issue: health_issue
 
       }
-})
-res.status(201).send({success:true});
-  }catch(error){
-    res.send({success:false});
+    })
+    res.status(201).send({ success: true });
+  } catch (error) {
+    res.send({ success: false });
   }
 }
