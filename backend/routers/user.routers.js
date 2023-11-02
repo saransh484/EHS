@@ -7,6 +7,7 @@ router.post('/registration', UserController.register);
 router.post('/verifyOTP', UserController.verifyOTP);
 router.put('/addname', UserController.addName);
 router.post('/findUser', UserController.FindUser);
+router.get('/getUserDetails/:phone', UserController.GetUserDetails);
 router.post('/hospitalRegister', UserController.registreHospital);
 router.post('/findHospital', UserController.FindHospital);
 router.post('/verifyMobile', UserController.VerifyMobile);
@@ -27,6 +28,8 @@ router.get('/fetchhospitals', UserController.allHospital);
 router.get('/showAllHospital', UserController.showAllHospital);
 router.post('/bookAppointment', UserController.bookAppointment);
 router.get('/fetchappointment/:id', UserController.getAppointment);
+router.get('/userfetchappointment/:id', UserController.getUserAppointment);
+
 router.get('/getCamps/:pin', UserController.getCamps);
 router.post('/postAppointment/:id', UserController.postAppointment);
 
@@ -35,10 +38,11 @@ router.post('/postAppointment/:id', UserController.postAppointment);
 //   UserController.addReport
 // );
 
-
 router.get("/fetchUser/:id", UserController.fetchUser);
 router.post("/postCamp/:id", UserController.postCamp);
 router.post("/addDoc/:id", UserController.addDoc);
+router.post("/loginDoc", UserController.loginDoc);
+
 router.get("/fetchUHID/:id", UserController.getUHID);
 
 module.exports = router; 

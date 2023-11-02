@@ -109,6 +109,24 @@ exports.FindUser = async (req, res, next) => {
   }
 };
 
+
+exports.GetUserDetails = async (req, res, next) => {
+  try {
+    console.log("in controller finduser try block");
+    const phone = req.params.phone;
+    console.log(phone);
+    // const successRes = await UserService.registerUser(phone);
+    const successRes = await UserService.GetUserDetails(phone);
+    return res.status(200).send({
+      status: true,
+      message: "Success",
+      data: successRes,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.registreHospital = async (req, res, next) => {
   try {
     const successRes = await HospitalService.registerHospital(req.body);
@@ -215,7 +233,7 @@ exports.genData = async (req, res) => {
           $set: {
             "gen_data.age": age,
             "gen_data.height": height,
-            "gen_data.weight": weight,  
+            "gen_data.weight": weight,
             "gen_data.bp": bp,
             "gen_data.sugar": sugar,
           },
@@ -414,6 +432,26 @@ exports.getAppointment = async (req, res, next) => {
 };
 
 
+exports.getUserAppointment = async (req, res, next) => {
+  try {
+    const uhid = req.params.id;
+    const appointments = await AppointmentModel.find({ 'patient_data.UHID': uhid });
+    console.log(appointments, uhid);
+    if (appointments) {
+      return res.status(200).send({
+        status: true,
+        message: "Success",
+        data: appointments,
+      });
+    } else {
+      console.log(error);
+      return 'Appointments not found';
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.getUHID = async (req, res, next) => {
   try {
     const successRes = await UserService.fetchUHID(req.body);
@@ -526,10 +564,45 @@ exports.addDoc = async (req, res) => {
       fullname: name,
       phone,
       hospitalID: id,
-      docID:docID
+      docID: docID
     });
 
-    res.status(201).send({ success: true, data:doc });
+    res.status(201).send({ success: true, data: doc });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+
+exports.loginDoc = async (req, res) => {
+  // const id = req.params.id;
+  const { docid, pass } = req.body;
+  console.log(docid);
+
+  try {
+    const hosp = await DoctorModel.find({ 'docID': docid });
+    hashpassword = hosp[0]["pass"];
+    console.log("hosp", hosp);
+    console.log(hashpassword);
+    loginresult = 'a';
+
+
+    bcrypt.compare(pass, hashpassword, (err, result) => {
+      if (err) {
+        // Handle the error
+        console.error(err);
+      } else if (result) {
+        // Passwords match
+        loginresult = "correct";
+        console.log('Password is correct.');
+      } else {
+        // Passwords don't match
+        loginresult = "InCorrect";
+        console.log('Password is incorrect.');
+      }
+    });
+    res.status(201).send({ success: true, data: loginresult });
   } catch (error) {
     console.log(error);
   }

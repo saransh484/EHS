@@ -130,6 +130,33 @@ async function FindUser(params, callback) {
     }
 }
 
+
+async function GetUserDetails(phone, callback) {
+    try {
+        // const { phone } = params;
+        // if (!phone) {
+        //     throw new Error("PHONE NUMBER REQUIRED");
+        // }
+        console.log("phone", phone);
+        const existuser = await UserModel.findOne(
+            { phone },
+        );
+        console.log("updatedUsr");
+        console.log(existuser);
+        // return await createUser.save();
+        // const result = existuser;
+        if (existuser) {
+            return existuser;
+        }
+        else {
+            return "Not FOUND";
+        }
+
+    } catch (err) {
+        throw err;
+    }
+}
+
 // async function createOtp(params, callback) {
 //     const otp = otpGenerator.generate(4, {
 //         digits: true,
@@ -290,7 +317,7 @@ async function fetchUHID(params, callback) {
 }
 
 
-module.exports = { registerUser, FindUser, verifyOTP, addname, fetchUHID };
+module.exports = { registerUser, FindUser, verifyOTP, addname, fetchUHID, GetUserDetails };
 
 
 
