@@ -14,7 +14,8 @@ function App() {
 
   return (
     <div>
-      <EHS_Dashboard/>
+      {/*<EHS_Dashboard/>*/}
+      <Admin_login/>
       <Routes>
         <Route path={'/reg_contact'} element={<Hospital_reg/>}/>
         <Route path={'/reg_basic_detail'} element={<Basic_detail/>} />
