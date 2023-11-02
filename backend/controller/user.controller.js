@@ -215,7 +215,7 @@ exports.genData = async (req, res) => {
           $set: {
             "gen_data.age": age,
             "gen_data.height": height,
-            "gen_data.weight": weight,
+            "gen_data.weight": weight,  
             "gen_data.bp": bp,
             "gen_data.sugar": sugar,
           },
