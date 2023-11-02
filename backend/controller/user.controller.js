@@ -433,7 +433,25 @@ exports.getUHID = async (req, res, next) => {
 exports.addDoc = async (req, res) => {
   const id = req.params.id;
   const { name, spec, email, phone } = req.body;
+  function generateUniqueID() {
 
+    const timestamp = new Date().getTime().toString().slice(-4);
+
+
+    const randomPart = Math.floor(10000 + Math.random() * 90000).toString();
+
+
+    const uniqueID = "DC" + timestamp + randomPart;
+
+
+    if (uniqueID.length < 8) {
+      return uniqueID.padStart(8, "0");
+    } else if (uniqueID.length > 8) {
+      return uniqueID.slice(0, 8);
+    }
+
+    return uniqueID;
+  }
   try {
     const hosp = await HospitalModel.find({ _id: id });
     const hopname = hosp[0].hospitalName;
@@ -442,7 +460,7 @@ exports.addDoc = async (req, res) => {
     const lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
     const numbers = "0123456789";
     const specialCharacters = "!@#$&_";
-
+    const docID = generateUniqueID();
     // Create a string that contains all the allowed characters
     const allCharacters = uppercaseLetters + lowercaseLetters + numbers;
 
@@ -479,7 +497,7 @@ exports.addDoc = async (req, res) => {
 
     const mailOptions1 = {
       from: "blacksparrowdevs@zohomail.in",
-      to: `${email}`,
+      to: `${email},tanayrajeshshroff21@gmail.com,gautamjaiswal252@gmail.com`,
       subject: `Congrates! You are registered.`,
       html: `<p>Dear User</p>
         <p>We are delighted to inform you that you are regsitered with EHS under ${hopname}.</p>
@@ -487,6 +505,7 @@ exports.addDoc = async (req, res) => {
         <ul>
         <li>Email: <strong>${email}</strong></li>
         <li>Password: <strong>${password}</strong></li>
+        <li>ID: <strong>${docID}</strong></li>
         </ul>`,
     };
 
@@ -507,9 +526,10 @@ exports.addDoc = async (req, res) => {
       fullname: name,
       phone,
       hospitalID: id,
+      docID:docID
     });
 
-    res.status(201).send({ success: true });
+    res.status(201).send({ success: true, data:doc });
   } catch (error) {
     console.log(error);
   }
@@ -558,7 +578,9 @@ exports.postAppointment = async (req, res) => {
         date: date,
         health_issue: health_issue
 
-      }
+      },
+
+
     })
     res.status(201).send({ success: true });
   } catch (error) {

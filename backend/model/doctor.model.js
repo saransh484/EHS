@@ -6,7 +6,8 @@ const { Schema } = mongoose;
 const DoctorSchema = new Schema({
 
     hospitalID:String,
-    
+    docID:String,
+
     email:{
         type:String,
         require:true
