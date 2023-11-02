@@ -147,14 +147,16 @@ async function findHospital(params, callback) {
     }
 }
 
+
+
 async function verifyMobile(params, callback) {
     const { mobile, otp } = params;
     const existuser = await HospitalModel.findOne(
-        { mobile },
+        { "contact_data.mobile": mobile },
     );
     console.log(existuser);
     if (existuser) {
-        const hash = existuser["mobileHash"];
+        const hash = existuser["contact_data"]["mobileHash"];
         let [hashValue, expires] = hash.split('.');
         let now = Date.now();
         if (now > parseInt(expires)) return "OTP Expired";
@@ -176,11 +178,11 @@ async function verifyMobile(params, callback) {
 async function verifyMail(params, callback) {
     const { mail, otp } = params;
     const existuser = await HospitalModel.findOne(
-        { 'contact_data': { mail: mail } },
+        { 'contact_data.mail': mail },
     );
     console.log(existuser);
     if (existuser) {
-        const hash = existuser["mailHash"];
+        const hash = existuser["contact_data"]["mailHash"];
         let [hashValue, expires] = hash.split('.');
         let now = Date.now();
         if (now > parseInt(expires)) return "OTP Expired";
@@ -201,30 +203,28 @@ async function verifyMail(params, callback) {
 
 
 async function hospitalBasicDetail(params, callback) {
-    const { mail, mobile } = params;
+    const { hospital_login_cred, general_data, address_data } = params;
+    const hid = hospital_login_cred["hid"];
 
     try {
-        console.log
-            (params);
+        console.log("PARAMS");
+        console.log(params);
+
         // Find the user document by phone number and update the specified key-value pair
         // const createHospital = new HospitalModel({
         //     params
         // });
 
         const updatedUser = await HospitalModel.findOneAndUpdate(
-            { mail },
-            { $set: params },
+            { "hospital_login_cred.hid": hid },
+            { $set: { general_data, address_data } },
             { new: true }
         );
-        console.log(
-            updatedUser
-        );
-
+        console.log("Updated User:", updatedUser);
         if (!updatedUser) {
             console.log("User not found");
             return "User not found";
         }
-        console.log("Updated User:", updatedUser);
         console.log("Key-value pair updated successfully");
         return "updated";
     } catch (error) {
@@ -234,7 +234,9 @@ async function hospitalBasicDetail(params, callback) {
 }
 
 async function hospitalGovernmenttDetails(params, callback) {
-    const { mail } = params;
+    // const { mail } = params;
+    const { hospital_login_cred, govt_data } = params;
+    const hid = hospital_login_cred['hid'];
 
     try {
         console.log
@@ -245,8 +247,8 @@ async function hospitalGovernmenttDetails(params, callback) {
         // });
 
         const updatedUser = await HospitalModel.findOneAndUpdate(
-            { mail },
-            { $set: params },
+            { "hospital_login_cred.hid": hid },
+            { $set: { govt_data } },
             { new: true }
         );
         console.log(
