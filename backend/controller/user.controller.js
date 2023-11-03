@@ -12,7 +12,9 @@ const nodemailer = require("nodemailer");
 
 const HospitalModel = require("../model/hospital.model");
 const DoctorModel = require("../model/doctor.model");
-const { NewFactorListInstance } = require("twilio/lib/rest/verify/v2/service/entity/newFactor");
+const {
+  NewFactorListInstance,
+} = require("twilio/lib/rest/verify/v2/service/entity/newFactor");
 const CampsModel = require("../model/camps.model");
 exports.register = async (req, res, next) => {
   try {
@@ -75,14 +77,14 @@ exports.addName = async (req, res, next) => {
     //     { new: true }
     // );
 
-    const updatedUsr = await UserModel.findOneAndUpdate({ phone },
-      { $set: { city: city, name: name, mail: mail } },
+    const updatedUsr = await UserModel.findOneAndUpdate(
+      { phone },
+      { $set: { city: city, name: name, mail: mail } }
     );
-
 
     if (!updatedUsr) {
       console.log("User not found");
-      res.send({ already: false })
+      res.send({ already: false });
     }
     // Log the updated user document
     console.log("Updated User:", updatedUsr);
@@ -316,7 +318,7 @@ exports.postCamp = async (req, res) => {
       end_date,
       boost,
       HospitalID: id,
-      pin
+      pin,
     });
     res.status(201).send({ success: true });
   } catch (error) {
@@ -394,7 +396,9 @@ exports.getAppointment = async (req, res, next) => {
   try {
     const hopid = req.params.id;
 
-    const appointments = await AppointmentModel.find({ 'appointment_data.hospital_id': hopid });
+    const appointments = await AppointmentModel.find({
+      "appointment_data.hospital_id": hopid,
+    });
     console.log(appointments, hopid);
     if (appointments) {
       return res.status(200).send({
@@ -404,15 +408,12 @@ exports.getAppointment = async (req, res, next) => {
       });
     } else {
       console.log(error);
-      return 'Appointments not found';
+      return "Appointments not found";
     }
-
-
   } catch (error) {
     throw error;
   }
 };
-
 
 exports.getUHID = async (req, res, next) => {
   try {
@@ -427,22 +428,15 @@ exports.getUHID = async (req, res, next) => {
   }
 };
 
-
-
-
 exports.addDoc = async (req, res) => {
   const id = req.params.id;
   const { name, spec, email, phone } = req.body;
   function generateUniqueID() {
-
     const timestamp = new Date().getTime().toString().slice(-4);
-
 
     const randomPart = Math.floor(10000 + Math.random() * 90000).toString();
 
-
     const uniqueID = "DC" + timestamp + randomPart;
-
 
     if (uniqueID.length < 8) {
       return uniqueID.padStart(8, "0");
@@ -454,7 +448,7 @@ exports.addDoc = async (req, res) => {
   }
   try {
     const hosp = await HospitalModel.find({ _id: id });
-    const hopname = hosp[0].hospitalName;
+    const hopname = hosp[0].general_data.hospitalName;
 
     const uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
@@ -526,10 +520,10 @@ exports.addDoc = async (req, res) => {
       fullname: name,
       phone,
       hospitalID: id,
-      docID:docID
+      docID: docID,
     });
 
-    res.status(201).send({ success: true, data:doc });
+    res.status(201).send({ success: true, data: doc });
   } catch (error) {
     console.log(error);
   }
@@ -540,32 +534,24 @@ exports.getCamps = async (req, res) => {
   try {
     const camps = await CampsModel.find({ pin: pin });
     res.status(200).send(camps);
-
-
   } catch (error) {
     res.send({ message: false });
   }
-}
-
+};
 
 exports.showAllHospital = async (req, res) => {
-
   try {
-    const hospitals = await HospitalModel.find({}, { hospital_login_cred: 0, mailHash: 0, mobileHash: 0 });
+    const hospitals = await HospitalModel.find(
+      {},
+      { hospital_login_cred: 0, mailHash: 0, mobileHash: 0 }
+    );
     console.log("her");
 
-
     res.send(hospitals);
-
   } catch (error) {
     res.send(error);
   }
-}
-
-
-
-
-
+};
 
 exports.postAppointment = async (req, res) => {
   const id = req.params.id;
@@ -576,14 +562,11 @@ exports.postAppointment = async (req, res) => {
       appointment_data: {
         hospital_id: id,
         date: date,
-        health_issue: health_issue
-
+        health_issue: health_issue,
       },
-
-
-    })
+    });
     res.status(201).send({ success: true });
   } catch (error) {
     res.send({ success: false });
   }
-}
+};
