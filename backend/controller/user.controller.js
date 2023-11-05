@@ -474,11 +474,7 @@ exports.addDoc = async (req, res) => {
   function generateUniqueID() {
 
     const timestamp = new Date().getTime().toString().slice(-4);
-
-
     const randomPart = Math.floor(10000 + Math.random() * 90000).toString();
-
-
     const uniqueID = "DC" + timestamp + randomPart;
 
 

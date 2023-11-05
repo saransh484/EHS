@@ -29,7 +29,6 @@ router.get('/showAllHospital', UserController.showAllHospital);
 router.post('/bookAppointment', UserController.bookAppointment);
 router.get('/fetchappointment/:id', UserController.getAppointment);
 router.get('/userfetchappointment/:id', UserController.getUserAppointment);
-
 router.get('/getCamps/:pin', UserController.getCamps);
 router.post('/postAppointment/:id', UserController.postAppointment);
 
@@ -45,4 +44,4 @@ router.post("/loginDoc", UserController.loginDoc);
 
 router.get("/fetchUHID/:id", UserController.getUHID);
 
-module.exports = router; 
+module.exports = router;  
