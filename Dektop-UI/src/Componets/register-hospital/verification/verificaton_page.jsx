@@ -7,31 +7,20 @@ import {connect} from "react-redux";
 import {updateFormField} from "../../../redux-stuff/form_action.js";
 import axios from 'axios'
 library.add(faCircle)
-const Verificaton_page = ({email, tel_no, mob_no, h_name, owner, staff, city, state, pin, type, feature, year_est, pvt_path, path_lic, alw_apnt_bk, addr1, addr2, addr3,tan_no, pan, updateFormField}) =>{
+const Verificaton_page = ({hid, tan_no, pan, updateFormField}) =>{
     const handleSubmit = async (e) => {
-            // Handle the submission of data (e.g., API request) with the form fields
+        e.preventDefault();
         const info = {
-            email: email,
-            tel_no: tel_no,
-            mob_no: mob_no,
-            h_name: h_name,
-            owner:owner,
-            staff:staff,
-            city:city,
-            state:state,
-            pin:pin,
-            type:type,
-            feature:feature,
-            year_est:year_est,
-            pvt_path:pvt_path,
-            path_lic:path_lic,
-            alw_apnt_bk:alw_apnt_bk,
-            addr1:addr1,
-            addr2:addr2,
-            addr3:addr3,
-            tan_no: tan_no,
-            pan:pan
+            hospital_login_cred: {
+                hid: hid
+            },
+            govt_data: {
+                Tan:tan_no,
+                Pan:pan,
+                hospitalLicense:''
+            }
         }
+
         console.log(info)
         try {
             const response = await axios.post('/api/',info);
@@ -97,24 +86,7 @@ const Verificaton_page = ({email, tel_no, mob_no, h_name, owner, staff, city, st
 
 const mapStateToProps = (state) => {
     return {
-        email: state.form.email,
-        tel_no: state.form.tel_no,
-        mob_no: state.form.mob_no,
-        h_name: state.form.h_name,
-        owner:state.form.owner,
-        staff:state.form.staff,
-        city:state.form.city,
-        state:state.form.state,
-        pin:state.form.pin,
-        type:state.form.type,
-        feature:state.form.feature,
-        year_est:state.form.year_est,
-        pvt_path:state.form.pvt_path,
-        path_lic:state.form.path_lic,
-        alw_apnt_bk:state.form.alw_apnt_bk,
-        addr1:state.form.addr1,
-        addr2:state.form.addr2,
-        addr3:state.form.addr3,
+        hid: state.form.hid,
         tan_no: state.form.tan_no,
         pan:state.form.pan
     };

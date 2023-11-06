@@ -2,12 +2,25 @@ import s from './dash.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCirclePlus, faPlus, faNotesMedical, faHospital,   faLinesLeaning, faQrcode, faUserDoctor, faTent } from '@fortawesome/free-solid-svg-icons'
+import {useState} from "react";
+import Popup_box from "./popup.jsx";
 library.add(faCirclePlus, faPlus, faNotesMedical, faHospital, faLinesLeaning, faQrcode, faUserDoctor, faTent)
 
 
 
 function EHS_Dashboard() {
     
+    const [open, setOpen] = useState(false);
+
+    const handleClickToOpen = () => {
+        setOpen(true);
+
+    };
+
+    const handleToClose = () => {
+        setOpen(false);
+    };
+
     return(
         <>
         <div className={s.whole_screen}>
@@ -29,7 +42,8 @@ function EHS_Dashboard() {
                     <span>time</span>
                     <span>health issue</span>
                     <div className={s.assist_btn}>
-                        <button><i> <FontAwesomeIcon icon={["fa", "notes-medical",]}  style={{color: "#FFFFFF",}}/> </i>Assist</button>
+                        <button onClick={handleClickToOpen}><i> <FontAwesomeIcon icon={["fa", "notes-medical",]}  style={{color: "#FFFFFF",}}/> </i>Assist</button>
+                        <Popup_box open={open} onClose={handleToClose}/>
                     </div>
                 </div>
             </div>
