@@ -1,9 +1,9 @@
-.side{
+.sidee{
     background: white;
     border-radius: 15px;
 }
 
-.side_main{
+.side_mainn{
     display: flex;
     flex-direction: column;
     margin-top: 6rem;
@@ -27,4 +27,10 @@
     align-items: center;
     justify-content: center;
     margin: 10px;
+}
+.titlee{
+    display: flex;
+    color: #2A2B3F;
+    font-size: 20px;
+    padding: 1rem;
 }

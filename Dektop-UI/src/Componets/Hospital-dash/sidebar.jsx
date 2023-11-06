@@ -8,12 +8,12 @@ library.add(faCirclePlus, faPlus, faNotesMedical, faHospital, faLinesLeaning, fa
 function Sidebar(){
     return(
         <div>
-            <div className={s.side}>
+            <div className={s.sidee}>
                 <div className={s.logo_name}>
                     <i> <FontAwesomeIcon icon={["fa", "hospital",]} size={'3x'}  style={{color: "#E55771",}}/></i>
-                    <div className={s.title}>EHS </div>
+                    <div className={s.titlee}>EHS </div>
                 </div>
-                <div className={s.side_main}>
+                <div className={s.side_mainn}>
                     <div className={s.chhotu}>
                         <i> <FontAwesomeIcon icon={["fa", "lines-leaning",]} size={'2x'}  style={{color: "#2A2B3F",}}/></i>
                         <span>Appointments</span>

@@ -6,3 +6,11 @@ export const updateFormField = (fieldName, fieldValue) => {
     fieldValue,
   };
 };
+
+export const updateData = (fieldName, fieldValue) => {
+  return{
+    type : 'UPDATE_DATA',
+    fieldName,
+    fieldValue
+  };
+};

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './A_login.css'
 import axios from 'axios'
+import {useNavigate} from "react-router-dom";
 
 function Admin_login() {
 
@@ -8,6 +9,10 @@ function Admin_login() {
     const [password , setpassword] = useState('')
     const [dataIn, setDataIn] = useState('')
 
+    const navigate = useNavigate();
+    const gotoSignup = () =>{
+        navigate('/contact_det')
+    }
 
     const submitThis = async (e) => {
         e.preventDefault();
@@ -42,6 +47,10 @@ function Admin_login() {
             <div className='login-button'>
                 <button type="submit" >Login</button>
             </div>
+                <div className='login-button'>
+                    <span>New to our platform?</span>
+                    <button onClick={gotoSignup }>Signup</button>
+                </div>
             </form>
             </div>
         </>
