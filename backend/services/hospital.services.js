@@ -201,7 +201,6 @@ async function verifyMail(params, callback) {
     }
 }
 
-
 async function hospitalBasicDetail(params, callback) {
     const { hospital_login_cred, general_data, address_data } = params;
     const hid = hospital_login_cred["hid"];
@@ -269,7 +268,7 @@ async function hospitalGovernmenttDetails(params, callback) {
 
 
 async function generateHospitalIdPwd(params, callback) {
-    const { mail } = params;
+    const { hid } = params;
 
     try {
         console.log
@@ -279,30 +278,27 @@ async function generateHospitalIdPwd(params, callback) {
         //     params
         // });
 
-        do {
-            const min = 1000000; // 7-digit minimum value
-            const max = 9999999; // 7-digit maximum value
-            const randomDigits = Math.floor(Math.random() * (max - min + 1)) + min;
-            const hospital_Id = `HID${randomDigits}`;
-            const randompwd = Math.floor(Math.random() * (max - min + 1)) + min;
-            // const pwdhash = crypto.createHmac("sha256", key).update(randompwd).digest("hex");
-            const IdExist = await HospitalModel.find({
-                'hospital_login_cred.hid'
-                    : hospital_Id
-            });
-            if (!IdExist) {
-                const updatedUser = await HospitalModel.findOneAndUpdate(
-                    { mail: mail },
-                    {
-                        $set: {
-                            'hospital_login_cred.hid': hospital_Id,
-                            'hospital_login_cred.pwd': randompwd
-                        }
-                    },
-                    { new: true }
-                );
-            }
-        } while (IdExist);
+        const min = 1000000; // 7-digit minimum value
+        const max = 9999999; // 7-digit maximum value
+        const randomDigits = Math.floor(Math.random() * (max - min + 1)) + min;
+        // const hospital_Id = `HID${randomDigits}`;
+        const randompwd = Math.floor(Math.random() * (max - min + 1)) + min;
+        // const pwdhash = crypto.createHmac("sha256", key).update(randompwd).digest("hex");
+        // const IdExist = await HospitalModel.find({
+        //     'hospital_login_cred.hid'
+        //         : hospital_Id
+        // });
+
+
+        const updatedUser = await HospitalModel.findOneAndUpdate(
+            { 'hospital_login_cred.hid': hid },
+            {
+                $set: {
+                    'hospital_login_cred.pwd': randompwd
+                }
+            },
+            { new: true }
+        );
         console.log(
             updatedUser
         );
@@ -311,7 +307,12 @@ async function generateHospitalIdPwd(params, callback) {
             return { data: false }
         }
         console.log("Updated User:", updatedUser);
-        return updatedUser;
+
+        idpwd = {
+            "Hospital_ID": hid,
+            "Password": randompwd
+        };
+        return idpwd;
     } catch (error) {
         console.error("Error:", error);
         return { error: true }

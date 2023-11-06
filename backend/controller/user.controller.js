@@ -111,6 +111,24 @@ exports.FindUser = async (req, res, next) => {
   }
 };
 
+
+exports.GetUserDetails = async (req, res, next) => {
+  try {
+    console.log("in controller finduser try block");
+    const phone = req.params.phone;
+    console.log(phone);
+    // const successRes = await UserService.registerUser(phone);
+    const successRes = await UserService.GetUserDetails(phone);
+    return res.status(200).send({
+      status: true,
+      message: "Success",
+      data: successRes,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.registreHospital = async (req, res, next) => {
   try {
     const successRes = await HospitalService.registerHospital(req.body);
