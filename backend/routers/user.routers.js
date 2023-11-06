@@ -28,7 +28,7 @@ router.get("/fetchhospitals", UserController.allHospital);
 router.get("/showAllHospital", UserController.showAllHospital);
 router.post("/bookAppointment", UserController.bookAppointment);
 router.get("/fetchappointment/:id", UserController.getAppointment);
-router.get("/userfetchappointment/:id", UserController.getUserAppointment);
+// router.get("/userfetchappointment/:id", UserController.getUserAppointment);
 router.get("/getCamps/:pin", UserController.getCamps);
 router.post("/postAppointment/:id", UserController.postAppointment);
 
