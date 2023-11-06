@@ -44,7 +44,6 @@ async function bookAppointment(params) {
 }
 
 
-
 async function getAppointment(params) {
     const { hospitalId } = params;
     try {
@@ -64,6 +63,5 @@ async function getAppointment(params) {
 }
 
 module.exports = { bookAppointment, getAppointment };
-
 
 
