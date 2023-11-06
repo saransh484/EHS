@@ -136,6 +136,9 @@ exports.registreHospital = async (req, res, next) => {
       status: true,
       message: "Success",
       data: successRes,
+      hid: successRes.hospital_login_cred.hid,
+      mobileOTP : successRes.contact_data.mobileotp,
+      mailOTP : successRes.contact_data.mailotp
     });
   } catch (error) {
     throw error;
