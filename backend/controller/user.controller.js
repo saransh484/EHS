@@ -131,11 +131,15 @@ exports.GetUserDetails = async (req, res, next) => {
 
 exports.registreHospital = async (req, res, next) => {
   try {
+    res.set("Access-Control-Allow-Origin", "*");
     const successRes = await HospitalService.registerHospital(req.body);
     return res.status(200).send({
       status: true,
       message: "Success",
       data: successRes,
+      hid: successRes.hospital_login_cred.hid,
+      mobileOTP : successRes.contact_data.mobileotp,
+      mailOTP : successRes.contact_data.mailotp
     });
   } catch (error) {
     throw error;
@@ -157,6 +161,7 @@ exports.FindHospital = async (req, res, next) => {
 
 exports.VerifyMobile = async (req, res, next) => {
   try {
+    res.set("Access-Control-Allow-Origin", "*");
     const successRes = await HospitalService.verifyMobile(req.body);
     return res.status(200).send({
       status: true,
@@ -170,6 +175,7 @@ exports.VerifyMobile = async (req, res, next) => {
 
 exports.VerifyMobile = async (req, res, next) => {
   try {
+    res.set("Access-Control-Allow-Origin", "*");
     const successRes = await HospitalService.verifyMobile(req.body);
     return res.status(200).send({
       status: true,
@@ -183,6 +189,7 @@ exports.VerifyMobile = async (req, res, next) => {
 
 exports.VerifyMail = async (req, res, next) => {
   try {
+    res.set("Access-Control-Allow-Origin", "*");
     const successRes = await HospitalService.verifyMail(req.body);
     return res.status(200).send({
       status: true,
@@ -196,6 +203,7 @@ exports.VerifyMail = async (req, res, next) => {
 
 exports.addBasicDetails = async (req, res, next) => {
   try {
+    res.set("Access-Control-Allow-Origin", "*");
     const successRes = await HospitalService.hospitalBasicDetail(req.body);
     return res.status(200).send({
       status: true,
@@ -209,6 +217,7 @@ exports.addBasicDetails = async (req, res, next) => {
 
 exports.addGovtDetails = async (req, res, next) => {
   try {
+    res.set("Access-Control-Allow-Origin", "*");
     const successRes = await HospitalService.hospitalGovernmenttDetails(
       req.body
     );
@@ -228,6 +237,7 @@ exports.genData = async (req, res) => {
   const { age, height, weight, bp, sugar } = req.body;
   console.log(age, height, weight, bp, sugar, _id);
   try {
+    res.set("Access-Control-Allow-Origin", "*");
     if (_id) {
       await UserModel.updateOne(
         { _id },
