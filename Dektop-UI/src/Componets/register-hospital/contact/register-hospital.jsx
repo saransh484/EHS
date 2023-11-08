@@ -33,6 +33,7 @@ function Hospital_reg({hid,email, tel_no, mob_no, updateFormField}) {
 //            next_page(response.data)
         } catch (error) {
             console.error(error)
+            setloading(false)
         }
     }
     
