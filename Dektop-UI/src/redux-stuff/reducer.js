@@ -1,5 +1,6 @@
 // reducers/formReducer.js
 const initialState = {
+    hid:'',
     email: '',
     tel_no: '',
     mob_no: '',
@@ -23,7 +24,13 @@ const initialState = {
 //    govt_lic:''
 };
 
-const formReducer = (state = initialState, action) => {
+const share = {
+    id:'',
+    data1:'',
+    data2:''
+}
+
+export const formReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'UPDATE_FORM_FIELD':
             return { ...state, [action.fieldName]: action.fieldValue };
@@ -32,4 +39,12 @@ const formReducer = (state = initialState, action) => {
     }
 };
 
-export default formReducer;
+export const shareReducer = (state = share, action) =>{
+    switch (action.type){
+        case 'UPDATE_DATA':
+            return {...state, [action.fieldName]: action.fieldValue};
+        default:
+            return state;
+    }
+}
+

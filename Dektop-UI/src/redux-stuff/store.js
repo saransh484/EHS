@@ -1,8 +1,9 @@
 import { createStore, combineReducers } from 'redux';
-import formReducer from './reducer.js';
+import {formReducer, shareReducer} from './reducer.js';
 
 const rootReducer = combineReducers({
     form: formReducer,
+    data: shareReducer
 });
 
 const store = createStore(rootReducer);

@@ -5,11 +5,66 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import { connect } from 'react-redux';
 import {updateFormField} from "../../../redux-stuff/form_action.js";
-import {Link} from "react-router-dom";
+import {useState} from "react";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 library.add(faCircle)
 
-function Basic_detil({h_name, owner, staff, city, state, pin, type, feature, year_est, pvt_path, path_lic, alw_apnt_bk, addr1, addr2, addr3, updateFormField}) {
+function Basic_detil({hid,h_name, owner, staff, city, state, pin, type, feature, year_est, pvt_path, path_lic, alw_apnt_bk, addr1, addr2, addr3, updateFormField}) {
+
+    const navigate = useNavigate()
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const info = {
+            hospital_login_cred: {
+                hid: hid
+            },
+            general_data: {
+                hospitalName: h_name,
+                ownership: owner,
+                staffSize: staff,
+                city: city,
+                state: state,
+                pinCode: pin,
+                type: type,
+                features: outputArray,
+                yearOfEstablishment: year_est,
+                haveLabs: pvt_path,
+                PathologyLicense: path_lic,
+                allowAppointment: alw_apnt_bk
+            },
+            address_data:{
+                address1:addr1,
+                address2:addr2,
+                address3:addr3
+            }
+        }
+
+        console.log(info)
+        try {
+            const response = await axios.put('https://ehs-q3hx.onrender.com/api/addHospitalBasicDetails',info);
+            console.log(response.data)
+
+           
+
+        } catch (error) {
+            console.error(error)
+        }
+    };
+
+    const [outputArray, setOutputArray] = useState([]);
+    const [inputValue, setInputValue] = useState('');
+
+    const handleInputChange = (event) => {
+        const value = event.target.value;
+        setInputValue(value);
+        const separatedArray = value.split(',');
+        setOutputArray(separatedArray);
+        console.log(outputArray)
+    };
+
+
     return <>
 
     <div>
@@ -93,7 +148,7 @@ function Basic_detil({h_name, owner, staff, city, state, pin, type, feature, yea
                 <div className={style.semi_input}>
                     <label htmlFor="">Features</label>
                     <input type="text" name="feature-text"
-                        value={feature} onChange={(e)=> updateFormField('feature', e.target.value)}
+                        value={inputValue} onChange={handleInputChange}
                         id="feature-text" placeholder='Checklist for features' required/>
                 </div>
                 <div className={style.semi_input}>
@@ -152,9 +207,7 @@ function Basic_detil({h_name, owner, staff, city, state, pin, type, feature, yea
         </div>
 
         <div className={style.button_saveCont}>
-            <Link to={"/reg_verify"}>
-                <button>Save and Continue</button>
-            </Link>
+                <button onClick={handleSubmit}>Save and Continue</button>
         </div>
 
     </div>
@@ -164,6 +217,7 @@ function Basic_detil({h_name, owner, staff, city, state, pin, type, feature, yea
 
 const mapStateToProps = (state) => {
     return {
+        hid:state.form.hid,
         h_name: state.form.h_name,
         owner:state.form.owner,
         staff:state.form.staff,

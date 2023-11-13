@@ -5,26 +5,41 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
 import {connect} from "react-redux";
 import {updateFormField} from "../../../redux-stuff/form_action.js";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
+import {useState} from "react";
+import {Backdrop} from "@mui/material";
 library.add(faCircle)
 
 
-function Hospital_reg({email, tel_no, mob_no, updateFormField}) {
+function Hospital_reg({hid,email, tel_no, mob_no, updateFormField}) {
 
+    const [loading, setloading] = useState(false)
+    const [resp, setresp] = useState([])
+    const navigate = useNavigate()
     const submitThis = async (e) => {
         e.preventDefault();
-
-        const info = {phone:mob_no}
+        setloading(true)
+        const info = {mail:email, telephone:tel_no, mobile: mob_no}
         
         try {
-            const response = await axios.post('https://ehs-q3hx.onrender.com/api/registration',info);
+            const response = await axios.post('https://ehs-q3hx.onrender.com/api/hospitalRegister',info);
             console.log(response.data)
+            setresp(response.data)
+            setloading(false)
+//            next_page(response.data)
         } catch (error) {
             console.error(error)
         }
     }
-
+    
+    const next_page = (DATA) => {
+        navigate('/verify_otp', {state:{ data:{DATA}}})
+    }
+    
     return <>
 
     <div>
@@ -72,11 +87,17 @@ function Hospital_reg({email, tel_no, mob_no, updateFormField}) {
         </div>
 
         <div className={s.button_saveCont}>
-            {/*<Link to={"/reg_basic_detail"}>*/}
+            <Link to={"/reg_basic_detail"}>
                 <button onClick={submitThis} >Save and Continue</button>
-            {/*</Link>?*/}
+            </Link>
         </div>
-
+        {
+        loading && (<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px'}}>
+            <Backdrop open={loading}>
+                <CircularProgress />
+            </Backdrop>
+        </Box>)
+        }
     </div>
 
     </>
@@ -84,6 +105,7 @@ function Hospital_reg({email, tel_no, mob_no, updateFormField}) {
 
 const mapStateToProps = (state) => {
     return {
+        hid:state.form.hid,
         email: state.form.email,
         tel_no: state.form.tel_no,
         mob_no: state.form.mob_no,
