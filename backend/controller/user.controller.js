@@ -18,6 +18,7 @@ const {
 const CampsModel = require("../model/camps.model");
 const { Parameter } = require("twilio/lib/twiml/VoiceResponse");
 const DiagnosisModel = require("../model/diagnosis.model");
+const HealthHistoryModel = require("../model/healthHistory.model");
 exports.register = async (req, res, next) => {
   try {
     const { phone } = req.body;
@@ -654,6 +655,33 @@ exports.AddDiagnosis = async (req, res) => {
     res.send({ message: false });
   }
 };
+
+
+exports.AddHealthHistory = async (req, res) => {
+  const data = req.body;
+  try {
+    const createHealthHistory = new HealthHistoryModel(data);
+    const ret = await createHealthHistory.save();
+    console.log(ret);
+    res.status(200).send(ret);
+  } catch (error) {
+    res.send({ message: false });
+  }
+};
+
+exports.fetchPatientPrescription = async (req, res) => {
+  const uhid = req.params.UHID;
+  console.log(uhid);
+  try {
+    const prescription = await DiagnosisModel.find({ 'appointment_data.UHID': uhid });
+    console.log(prescription);
+    res.status(200).send(prescription);
+  } catch (error) {
+    res.send({ message: false });
+  }
+};
+
+
 
 exports.showAllHospital = async (req, res) => {
   try {
