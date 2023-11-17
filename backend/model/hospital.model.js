@@ -44,7 +44,6 @@ const hospitalSchema = new Schema({
         mail: {
             type: String,
             lowercase: true,
-            require: true,
             unique: true,
         },
         mobile: {
