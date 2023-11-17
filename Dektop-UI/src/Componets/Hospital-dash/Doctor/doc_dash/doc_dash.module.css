@@ -117,3 +117,22 @@ body{
     font-weight: bold;
     margin-right: 1rem;
 }
+.row_1{
+    display: flex;
+    align-items: center;
+}
+.inner{
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem;
+}
+.inner_D{
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem;
+    width: 3rem;
+}
+.sec{
+    display: flex;
+    flex-direction: row;
+}

@@ -32,6 +32,8 @@ function App() {
         <Route path={'/scan'} element={<Scan_page/>}/>
         <Route path={'/scaned_id'} element={<Dig_History/>}/>
 
+        <Route path={'/doc_dash'} element={<DOC_Dashboard/>} />
+
       </Routes>
     </div>
   )
