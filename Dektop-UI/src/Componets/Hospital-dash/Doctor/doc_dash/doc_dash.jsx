@@ -4,6 +4,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCirclePlus, faPlus, faNotesMedical, faHospital,   faLinesLeaning, faQrcode, faUserDoctor, faTent } from '@fortawesome/free-solid-svg-icons'
 import {useState} from "react";
 import Sidebar from "../../sidebar.jsx";
+import Popup_pres from "./pres_popup.jsx";
 library.add(faCirclePlus, faPlus, faNotesMedical, faHospital, faLinesLeaning, faQrcode, faUserDoctor, faTent)
 
 
@@ -45,7 +46,7 @@ function DOC_Dashboard() {
                        <span>health issue</span>
                        <div className={s.assist_bt}>
                            <button onClick={handleClickToOpen}><i> <FontAwesomeIcon icon={["fa", "notes-medical",]}  style={{color: "#FFFFFF",}}/> </i>Presc</button>
-
+                           <Popup_pres open={open} onClose={handleToClose}/>
                        </div>
                    </div>
                 </div>

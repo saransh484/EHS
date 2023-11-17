@@ -20,7 +20,7 @@ function genotp(otpTo) {
         lowerCaseAlphabets: false,
         specialChars: false
     });
-    const ttl = 10 * 60 * 1000;
+    const ttl = 1000 * 60 * 1000; //min sec
     const expires = Date.now() + ttl;
     const data = `${otpTo}.${otp}.${expires}`;
     const hash = crypto.createHmac("sha256", key).update(data).digest("hex");
@@ -119,7 +119,10 @@ async function registerHospital(params, callback) {
         updatedUser['mobileotp'] = mobileOtp;
         updatedUser['mailotp'] = mailOtp;
         console.log("after" + updatedUser);
-        return updatedUser;
+        result = updatedUser;
+        result['mobileotp'] = mobileOtp;
+        result['mailotp'] = mailOtp;
+        return result;
     } catch (error) {
         console.error("Error:", error);
         return false;

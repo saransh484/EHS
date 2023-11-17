@@ -16,6 +16,8 @@ const {
   NewFactorListInstance,
 } = require("twilio/lib/rest/verify/v2/service/entity/newFactor");
 const CampsModel = require("../model/camps.model");
+const { Parameter } = require("twilio/lib/twiml/VoiceResponse");
+const DiagnosisModel = require("../model/diagnosis.model");
 exports.register = async (req, res, next) => {
   try {
     const { phone } = req.body;
@@ -133,13 +135,14 @@ exports.registreHospital = async (req, res, next) => {
   try {
     res.set("Access-Control-Allow-Origin", "*");
     const successRes = await HospitalService.registerHospital(req.body);
+    console.log("hospital registration query executed");
     return res.status(200).send({
       status: true,
       message: "Success",
       data: successRes,
       hid: successRes.hospital_login_cred.hid,
-      mobileOTP : successRes.contact_data.mobileotp,
-      mailOTP : successRes.contact_data.mailotp
+      mobileOTP: successRes.mobileotp,
+      mailOTP: successRes.mailotp
     });
   } catch (error) {
     throw error;
@@ -443,6 +446,29 @@ exports.getAppointment = async (req, res, next) => {
   }
 };
 
+exports.getUserAppointment = async (req, res, next) => {
+  try {
+    const uhid = req.params.id;
+
+    const appointments = await AppointmentModel.find({
+      "patient_data.UHID": uhid,
+    });
+    console.log(appointments, uhid);
+    if (appointments) {
+      return res.status(200).send({
+        status: true,
+        message: "Success",
+        data: appointments,
+      });
+    } else {
+      console.log(error);
+      return "Appointments not found";
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.getUHID = async (req, res, next) => {
   try {
     const successRes = await UserService.fetchUHID(req.body);
@@ -557,11 +583,73 @@ exports.addDoc = async (req, res) => {
   }
 };
 
+
+exports.fetchAvailDrs = async (req, res) => {
+  const hospitalId = req.params.hospitalId;
+  console.log(hospitalId);
+  try {
+    const Drs = await DoctorModel.find({ hospitalID: hospitalId });
+    console.log(Drs);
+    res.status(200).send(Drs);
+  } catch (error) {
+    res.send({ message: false });
+  }
+};
+
+
+exports.assignDoctor = async (req, res) => {
+  const appointmentId = req.body.appointmentId;
+  const doctorId = req.body.doctorId;
+  console.log(appointmentId);
+  console.log(doctorId);
+
+  try {
+    const Drs = await AppointmentModel.findOneAndUpdate({ appointmentId: appointmentId }, { $set: { 'appointment_data.doctor_id': doctorId } }, { new: true });
+    console.log(Drs);
+    res.status(200).send(Drs);
+  } catch (error) {
+    res.send({ message: false });
+  }
+};
+
+
 exports.getCamps = async (req, res) => {
   const pin = req.params.pin;
   try {
     const camps = await CampsModel.find({ pin: pin });
     res.status(200).send(camps);
+  } catch (error) {
+    res.send({ message: false });
+  }
+};
+
+exports.fetchDrsAppointment = async (req, res) => {
+  const DrId = req.params.DrId;
+  console.log(DrId);
+  try {
+    const DrsAppointment = await AppointmentModel.find({ 'appointment_data.doctor_id': DrId });
+    console.log(DrsAppointment);
+    res.status(200).send(DrsAppointment);
+  } catch (error) {
+    res.send({ message: false });
+  }
+};
+
+exports.AddDiagnosis = async (req, res) => {
+  const data = req.body;
+  const appointId = req.body.appointment_data.appointmentId;
+  try {
+
+    const createDiagnosis = new DiagnosisModel(data);
+    const ret = await createDiagnosis.save();
+    console.log(ret);
+    const diagid = ret['_id'];
+    console.log("Diagnosis ID :");
+    console.log(diagid);
+    const updateAppointmentWithDiagnosis = await AppointmentModel.findOneAndUpdate({ appointmentId: appointId }, { $set: { "diagnosis_data.prescription_id": diagid } }, { new: true });
+
+
+    res.status(200).send(updateAppointmentWithDiagnosis);
   } catch (error) {
     res.send({ message: false });
   }
