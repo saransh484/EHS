@@ -46,5 +46,7 @@ router.get("/fetchDR/:hospitalId", UserController.fetchAvailDrs); //fetch availa
 router.put("/assignDoctor", UserController.assignDoctor); // assign Dr to a patient 
 router.get("/fetchDoctorsAppointment/:DrId", UserController.fetchDrsAppointment); //fetch appointment of a Doctor
 router.post("/addDiagnosis", UserController.AddDiagnosis); //fetch appointment of a Doctor
+router.get("/fetchPatientPrescription/:UHID", UserController.fetchPatientPrescription); //fetch appointment of a Doctor
+router.post("/addHealthHistory", UserController.AddHealthHistory); //fetch appointment of a Doctor
 
 module.exports = router;
