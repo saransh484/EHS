@@ -358,7 +358,12 @@ async function hospitalLogin(params, callback) {
 
 async function allhospitals(params, callback) {
     try {
-        const hospitals = await HospitalModel.find();
+        // const hospitals = await HospitalModel.find();
+        const hospitals = await HospitalModel.find({
+            'general_dataa': { $exists: true }
+        });
+        console.log("After filtering:", hospitals);
+        // filter end
         console.log(hospitals);
         return hospitals;
     } catch (err) {

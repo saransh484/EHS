@@ -42,7 +42,7 @@ router.post("/postCamp/:id", UserController.postCamp);
 router.post("/addDoc/:id", UserController.addDoc);
 // router.post("/loginDoc", UserController.loginDoc);
 router.get("/fetchUHID/:id", UserController.getUHID);
-router.get("/fetchDR/:hospitalId", UserController.fetchAvailDrs); //fetch available Dr of hospital for appointment assist
+router.get("/fetchDR/:hospitalId?", UserController.fetchAvailDrs); //fetch available Dr of hospital for appointment assist
 router.put("/assignDoctor", UserController.assignDoctor); // assign Dr to a patient 
 router.get("/fetchDoctorsAppointment/:DrId", UserController.fetchDrsAppointment); //fetch appointment of a Doctor
 router.post("/addDiagnosis", UserController.AddDiagnosis); //fetch appointment of a Doctor

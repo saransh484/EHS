@@ -586,10 +586,18 @@ exports.addDoc = async (req, res) => {
 
 
 exports.fetchAvailDrs = async (req, res) => {
-  const hospitalId = req.params.hospitalId;
-  console.log(hospitalId);
+
+
+  let query = {}; // Initialize an empty query object
+
+  // Check if hospitalId is present in the request params
+  if (req.params.hospitalId) {
+    query.hospitalID = req.params.hospitalId;
+  }
+  // const hospitalId = req.params.hospitalId;
+  // console.log(hospitalId);
   try {
-    const Drs = await DoctorModel.find({ hospitalID: hospitalId });
+    const Drs = await DoctorModel.find(query);
     console.log(Drs);
     res.status(200).send(Drs);
   } catch (error) {
