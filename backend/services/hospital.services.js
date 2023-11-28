@@ -345,7 +345,7 @@ async function hospitalLogin(params, callback) {
         // let newCalculatedHash = crypto.createHmac("sha256", key).update(data).digest("hex");
         if (pwd === hash) {
             // if (true) {
-            return "Success";
+            return existuser;
         }
         else {
             return "Invalid ID or PWD";
