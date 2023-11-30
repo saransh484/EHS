@@ -725,10 +725,10 @@ exports.postAppointment = async (req, res) => {
 
 
 exports.loginDoc = async (req, res) => {
-  const { email, pass } = req.body;
+  const { docID, pass } = req.body;
 
   try {
-    const user = await DocModel.findOne({ email });
+    const user = await DocModel.findOne({ docID });
     if (user && (await bcrypt.compare(pass, user.pass))) {
 
       res.status(200).json({ success: true, docData: user });
