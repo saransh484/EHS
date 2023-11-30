@@ -728,15 +728,10 @@ exports.loginDoc = async(req,res) =>{
   const {email, pass} = req.body ;
 
   try{
-    const user = DocModel.find({$expr: {
-      $and: [
-        { $eq: ['$email', email] },
-        { $eq: ['$pass', pass] }
-      ]
-    }});
+    const user = DocModel.find({email:email,pass:pass});
 
     if(user){
-      res.send({docData:user, success:true});
+      res.send({ docData:user,success:true});
     }else{
       res.send({success:false})
     }
