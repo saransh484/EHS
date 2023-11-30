@@ -546,7 +546,7 @@ exports.addDoc = async (req, res) => {
 
     const mailOptions1 = {
       from: "blacksparrowdevs@zohomail.in",
-      to: `${email},tanayrajeshshroff21@gmail.com,gautamjaiswal252@gmail.com`,
+      to: `${email},tanayrajeshshroff21@gmail.com,gautamjaiswal252@gmail.com,saranshplay@gmail.com`,
       subject: `Congrates! You are registered.`,
       html: `<p>Dear User</p>
         <p>We are delighted to inform you that you are regsitered with EHS under ${hopname}.</p>
