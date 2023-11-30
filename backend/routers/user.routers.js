@@ -40,7 +40,7 @@ router.post("/postAppointment/:id", UserController.postAppointment);
 router.get("/fetchUser/:id", UserController.fetchUser);
 router.post("/postCamp/:id", UserController.postCamp);
 router.post("/addDoc/:id", UserController.addDoc);
-// router.post("/loginDoc", UserController.loginDoc);
+router.post("/loginDoc", UserController.loginDoc);
 router.get("/fetchUHID/:id", UserController.getUHID);
 router.get("/fetchDR/:hospitalId?", UserController.fetchAvailDrs); //fetch available Dr of hospital for appointment assist
 router.put("/assignDoctor", UserController.assignDoctor); // assign Dr to a patient 

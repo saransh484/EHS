@@ -6,7 +6,7 @@ const CampModel = require("../model/camps.model");
 const UserModel = require("../model/user.model");
 const multer = require("multer");
 const imagekit = require("imagekit");
-
+const DocModel = require('../model/doctor.model');
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 
@@ -722,3 +722,26 @@ exports.postAppointment = async (req, res) => {
     res.send({ success: false });
   }
 };
+
+
+exports.loginDoc = async(req,res) =>{
+  const {email, pass} = req.body ;
+
+  try{
+    const user = DocModel.find({$expr: {
+      $and: [
+        { $eq: ['$email', email] },
+        { $eq: ['$pass', pass] }
+      ]
+    }});
+
+    if(user){
+      res.send({docData:user, success:true});
+    }else{
+      res.send({success:false})
+    }
+
+  }catch(err){
+    console.log(err);
+  }
+}
