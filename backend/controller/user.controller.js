@@ -71,8 +71,8 @@ exports.addName = async (req, res, next) => {
   //   });
   // });
   try {
-    const { phone, name, city, mail } = req.body;
-    console.log("inside");
+    const { phone, name, city, mail, profilePic } = req.body;
+    console.log("inside2");
     // Find the user document by phone number and update the specified key-value pair
     // const updatedUser = await UserModel.findOneAndUpdate(
     //     { phone },
@@ -82,7 +82,7 @@ exports.addName = async (req, res, next) => {
 
     const updatedUsr = await UserModel.findOneAndUpdate(
       { phone },
-      { $set: { city: city, name: name, mail: mail } }
+      { $set: { city: city, name: name, mail: mail, profilePic: profilePic } }
     );
 
     if (!updatedUsr) {
@@ -724,19 +724,18 @@ exports.postAppointment = async (req, res) => {
 };
 
 
-exports.loginDoc = async(req,res) =>{
-  const {email, pass} = req.body ;
+exports.loginDoc = async (req, res) => {
+  const { email, pass } = req.body;
 
-  try{
+  try {
     const user = await DocModel.findOne({ email });
     if (user && (await bcrypt.compare(pass, user.pass))) {
-     
-      res.status(200).json({ success: true, docData:user});
-    }else{
-      res.status(404).json({success:false});
-    }
 
-  }catch(err){
+      res.status(200).json({ success: true, docData: user });
+    } else {
+      res.status(404).json({ success: false });
+    }
+  } catch (err) {
     console.log(err);
   }
 }
