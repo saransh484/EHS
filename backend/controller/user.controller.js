@@ -728,12 +728,12 @@ exports.loginDoc = async (req, res) => {
   const { email, pass } = req.body;
 
   try {
-    const user = DocModel.find({ email: email, pass: pass });
+    const user = await DocModel.findOne({ email });
+    if (user && (await bcrypt.compare(pass, user.pass))) {
 
-    if (user) {
-      res.send({ docData: user, success: true });
+      res.status(200).json({ success: true, docData: user });
     } else {
-      res.send({ success: false })
+      res.status(404).json({ success: false });
     }
   } catch (err) {
     console.log(err);

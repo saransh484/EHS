@@ -265,7 +265,7 @@ async function addname(params, callback) {
         // const updatedUser = await UserModel.findOneAndUpdate(
         //     { phone },
         //     { $set: { name,city}},
-        //     { new: true }
+        //     { new: true } 
         // );
 
         const updatedUsr = await UserModel.find({ phone: phone });
