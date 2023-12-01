@@ -284,64 +284,64 @@ exports.upload = multer({
 
 exports.addReport = async (req, res) => {
 
-    const  id  = req.params.id;
-    const { title, date,symptoms } = req.body;
+  const id = req.params.id;
+  const { title, date, symptoms } = req.body;
 
 
 
-    try {
-      if (!req.file) {
-        return res.status(400).send('No file uploaded');
-      }
-
-      // Retrieve file path of the uploaded PDF
-      const pdfPath = req.file.path;
-      const tm = Date.now();
-      // Read the uploaded PDF file as binary data
-      const pdfBuffer = require('fs').readFileSync(pdfPath);
-
-      // Upload PDF to ImageKit
-      const imageUploadResult = await imagekitClient.upload({
-        file: pdfBuffer,
-        fileName: req.file.originalname,
-        folder: '/reports', // Optional: Specify a folder in ImageKit
-        tags: ['pdf'],// Replace with your preferred file name
-        // Optional: Add tags
-      });
-
-      // Get the URL of the uploaded PDF from ImageKit
-      const pdfURL = imageUploadResult.url;
-
-//      const file1 = fs.readFileSync(reportpdf[0].path);
-//
-//      const base1 = file1.toString("base64");
-//
-//      const FileUplaodResult = await imagekitClient.upload({
-//        file: base1,
-//        fileName: reportpdf[0].originalname,
-//      });
-
-      // Upload Image 2 to ImageKit
-
-      const report = {
-        title,
-        date,
-        fileURL:pdfURL,
-        symptoms
-      }
-
-     const kk =  await UserModel.findOneAndUpdate(
-        { _id: id },
-        { $push: { reports: report } },
-        { new: true }
-
-      );
-
-      res.status(200).send({ success: true});
-    } catch (error) {
-      res.status(500).send({success:false});
-      console.log(error);
+  try {
+    if (!req.file) {
+      return res.status(400).send('No file uploaded');
     }
+
+    // Retrieve file path of the uploaded PDF
+    const pdfPath = req.file.path;
+    const tm = Date.now();
+    // Read the uploaded PDF file as binary data
+    const pdfBuffer = require('fs').readFileSync(pdfPath);
+
+    // Upload PDF to ImageKit
+    const imageUploadResult = await imagekitClient.upload({
+      file: pdfBuffer,
+      fileName: req.file.originalname,
+      folder: '/reports', // Optional: Specify a folder in ImageKit
+      tags: ['pdf'],// Replace with your preferred file name
+      // Optional: Add tags
+    });
+
+    // Get the URL of the uploaded PDF from ImageKit
+    const pdfURL = imageUploadResult.url;
+
+    //      const file1 = fs.readFileSync(reportpdf[0].path);
+    //
+    //      const base1 = file1.toString("base64");
+    //
+    //      const FileUplaodResult = await imagekitClient.upload({
+    //        file: base1,
+    //        fileName: reportpdf[0].originalname,
+    //      });
+
+    // Upload Image 2 to ImageKit
+
+    const report = {
+      title,
+      date,
+      fileURL: pdfURL,
+      symptoms
+    }
+
+    const kk = await UserModel.findOneAndUpdate(
+      { _id: id },
+      { $push: { reports: report } },
+      { new: true }
+
+    );
+
+    res.status(200).send({ success: true });
+  } catch (error) {
+    res.status(500).send({ success: false });
+    console.log(error);
+  }
 
 };
 
@@ -620,6 +620,10 @@ exports.fetchAvailDrs = async (req, res) => {
   // console.log(hospitalId);
   try {
     const Drs = await DoctorModel.find(query);
+    const hname = await DoctorModel.find(query);
+
+
+
     console.log(Drs);
     res.status(200).send(Drs);
   } catch (error) {
@@ -645,9 +649,11 @@ exports.assignDoctor = async (req, res) => {
 
 
 exports.getCamps = async (req, res) => {
-  
+  const currentDate = new Date();
+
+
   try {
-    const camps = await CampsModel.find();
+    const camps = await CampsModel.find({ end_date: { $gte: currentDate } });
     res.status(200).send(camps);
   } catch (error) {
     res.send({ message: false });
