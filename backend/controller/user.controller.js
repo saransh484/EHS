@@ -285,7 +285,7 @@ exports.upload = multer({
 exports.addReport = async (req, res) => {
 
     const  id  = req.params.id;
-    const { title, date } = req.body;
+    const { title, date,symptoms } = req.body;
 
 
 
@@ -326,7 +326,8 @@ exports.addReport = async (req, res) => {
       const report = {
         title,
         date,
-        fileURL:pdfURL
+        fileURL:pdfURL,
+        symptoms
       }
 
      const kk =  await UserModel.findOneAndUpdate(
