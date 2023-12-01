@@ -33,7 +33,7 @@ function Dig_History({Hname}) {
         try {
             const respnse = await axios.get('https://ehs-q3hx.onrender.com/api/fetchUser/'+ID)
             console.log(respnse.data)
-            setDxx(respnse.data[0])
+            setDxx(respnse.data[0].name)
             if (respnse.data[0].reports ){
                 console.log("present")
                 setGajab(respnse.data[0].reports)
@@ -65,7 +65,7 @@ function Dig_History({Hname}) {
         setColor('#E55771')
     }
 
-    const name = dxx.name
+
 
     return(
         <>
@@ -118,7 +118,7 @@ function Dig_History({Hname}) {
             </div>
             <div className={s.sub_main}>
                 <div className={s.p_text}>
-                    <span className={s.p_name}>{name} </span>
+                    <span className={s.p_name}>{dxx} </span>
                     <span>age:</span>
                     <span>height:</span>
                     <span>weight:</span>
