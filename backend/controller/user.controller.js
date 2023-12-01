@@ -362,7 +362,7 @@ exports.postCamp = async (req, res) => {
   const id = req.params.id;
   console.log(id);
   try {
-    const { age, title, start_date, end_date, boost, pin } = req.body;
+    const { age, title, start_date, end_date, boost } = req.body;
 
     const camp = await CampModel.create({
       title,
@@ -371,7 +371,7 @@ exports.postCamp = async (req, res) => {
       end_date,
       boost,
       HospitalID: id,
-      pin,
+
     });
     res.status(201).send({ success: true });
   } catch (error) {
