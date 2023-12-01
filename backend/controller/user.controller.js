@@ -649,13 +649,11 @@ exports.assignDoctor = async (req, res) => {
 
 
 exports.getCamps = async (req, res) => {
-  const pin = req.params.pin;
   const currentDate = new Date();
 
+
   try {
-    const camps = await CampsModel.find({
-      pin: pin, end_date: { $gte: currentDate }
-    });
+    const camps = await CampsModel.find({ end_date: { $gte: currentDate } });
     res.status(200).send(camps);
   } catch (error) {
     res.send({ message: false });
