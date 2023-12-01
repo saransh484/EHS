@@ -286,7 +286,7 @@ exports.addReport = async (req, res) => {
 
   const id = req.params.id;
   const { title, date, symptoms } = req.body;
-
+  console.log("upload route hit");
 
 
   try {
