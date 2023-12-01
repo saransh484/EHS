@@ -39,7 +39,9 @@ const userSchema = new Schema({
         {
             title: String,
             fileURL: String,
-            date: String
+            date: String,
+            symptoms:String,
+
         }
     ]
 
