@@ -5,32 +5,39 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCirclePlus} from '@fortawesome/free-solid-svg-icons'
 import {useState} from "react";
 import axios from "axios";
+import {updateData} from "../../../redux-stuff/form_action.js";
+import {connect} from "react-redux";
+import {Backdrop} from "@mui/material";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 library.add(faCirclePlus)
 
 
 
 
-function Camp_page() {
+function Camp_page({Hname,hid, id}) {
     
     const [title, settitle] = useState('')
     const [age, setage] = useState('')
     const [pin, setpin] = useState('')
     const [startdate, setstartdate] = useState('')
     const [enddate, setenddate] = useState('')
-    const [boost, setboost] = useState('')
+    const [boost, setboost] = useState(false)
     const [data, setdata] = useState('')
     const [loading, setLoading] = useState(false);
 
 
     const submitThis = async () => {
-
-        const info = {title:title, age:age, pin:pin, startdate:startdate, enddate:enddate, boost:boost}
+        setLoading(true)
+        const info = {title:title, age:age, pin:pin, start_date:startdate, end_date:enddate, boost:boost}
+        console.log(info)
 
         try {
-            setLoading(true)
-            const response = await axios.post('/api/',info);
+
+            const response = await axios.post('https://ehs-q3hx.onrender.com/api/postCamp/'+hid,info);
             console.log(response.data)
             setdata(response.data)
+            setLoading(false)
         } catch (error) {
             console.error(error)
         } finally {
@@ -38,11 +45,17 @@ function Camp_page() {
         }
     }
 
+    const handleDropdownChange = (event) => {
+        const selectedValue = event.target.value;
+        const newValue = selectedValue === 'true';
+        setboost(newValue);
+    };
+
     return(
         <>
         <div className={s.whole_screen}>
             <div className={s.upar}>
-                <div className={s.title}> Bombay Hospital, Indore </div>
+                <div className={s.title}> {Hname} </div>
                 <i> <FontAwesomeIcon icon={["fa", "circle-plus",]} size={"3x"} style={{color: "#E55771",}}/> </i>
             </div>
             <div className={s.sub_upar}>
@@ -63,18 +76,15 @@ function Camp_page() {
                     </div>
                     <div className={s.semi_input}>
                         <label htmlFor="">Age Group</label>
-                        <select name="age" id=""
-                            value={age} onChange={(e)=> setage(e.target.value)}>
-                            <option value="Government">Government</option>
-                            <option value="Private">Private</option>
-                            <option value="Hota hoga aur">Hota hoga aur</option>
-                        </select>
+                        <input type="number"
+                            value={age} onChange={(e)=>setage(e.target.value)}
+                            placeholder='Enter Age Group' required/>
                     </div>
                     <div className={s.semi_input}>
                         <label htmlFor="">PIN</label>
                         <input type="number" name="pin"
                             value={pin} onChange={(e)=> setpin(e.target.value)}
-                            id="staff-number" placeholder='Management Staff' required/>
+                            id="staff-number" placeholder='PIN Code' required/>
                     </div>
                 </div>
                 <div className={s.inp_fields}>
@@ -91,11 +101,10 @@ function Camp_page() {
                             id="telephone" placeholder='For patients to contact' required/>
                     </div>
                     <div className={s.semi_input}>
-                        <label htmlFor="">Boot Reach</label>
-                        <select name="boost" id="alw_apnt_bk"
-                            value={boost} onChange={(e)=> setboost(e.target.value)}>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                        <label htmlFor="">Boost Reach</label>
+                        <select id="dropdown" onChange={handleDropdownChange}>
+                            <option value="true">True</option>
+                            <option value="false">False</option>
                         </select>
                     </div>
                 </div>
@@ -103,14 +112,29 @@ function Camp_page() {
                     <span>Amount Payable </span>
                 </div>
                 <div className={s.button_pay}>
-                    <button>Save and Continue</button>
+                    <button onClick={submitThis} >Save and Continue</button>
                 </div>
             </div>
             
-            
+
+            {
+            loading && (<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px'}}>
+            <Backdrop open={loading}>
+                <CircularProgress />
+            </Backdrop>
+        </Box>)
+            }
+
         </div>
         </>
         )
 }
+const mapStateToProps = (state) => {
+    return {
+        hid:state.data.hid,
+        id: state.data.id,
+        Hname: state.data.Hname,
+    };
+};
 
-export default Camp_page
+export default connect(mapStateToProps, {updateData})(Camp_page)

@@ -9,13 +9,19 @@ import {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import {Backdrop} from "@mui/material";
+
 library.add(faCircle)
 
 function Basic_detil({hid,h_name, owner, staff, city, state, pin, type, feature, year_est, pvt_path, path_lic, alw_apnt_bk, addr1, addr2, addr3, updateFormField}) {
 
+    const [loading, setloading] = useState(false)
     const navigate = useNavigate()
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setloading(true)
         const info = {
             hospital_login_cred: {
                 hid: hid
@@ -45,11 +51,11 @@ function Basic_detil({hid,h_name, owner, staff, city, state, pin, type, feature,
         try {
             const response = await axios.put('https://ehs-q3hx.onrender.com/api/addHospitalBasicDetails',info);
             console.log(response.data)
-
-           
-
+            setloading(false)
+            navigate('/verify')
         } catch (error) {
             console.error(error)
+            setloading(false)
         }
     };
 
@@ -209,6 +215,14 @@ function Basic_detil({hid,h_name, owner, staff, city, state, pin, type, feature,
         <div className={style.button_saveCont}>
                 <button onClick={handleSubmit}>Save and Continue</button>
         </div>
+
+        {
+        loading && (<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px'}}>
+            <Backdrop open={loading}>
+                <CircularProgress />
+            </Backdrop>
+        </Box>)
+        }
 
     </div>
 

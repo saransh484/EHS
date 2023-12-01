@@ -12,11 +12,13 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import {LinearProgress} from "@mui/material";
+import {updateData} from "../../../../redux-stuff/form_action.js";
+import {connect} from "react-redux";
 library.add(faCirclePlus)
 
 
-
-function Doc_Prof() {
+function Doc_Prof({hid, id, Hname}) {
 
     const [open, setOpen] = React.useState(false);
     const [ email, setemail] = useState('')
@@ -24,6 +26,8 @@ function Doc_Prof() {
     const [ d_name, setd_name] = useState('')
     const [ phone, setphone] = useState('')
     const [data, setDataIn] = useState('')
+    const [loading, setloading] = useState(false)
+    const [data1, setdata1] = useState([])
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -39,25 +43,47 @@ function Doc_Prof() {
 //    console.log(id, data)
     const submitThis = async (e) => {
         e.preventDefault();
-        setOpen(false);
+//        setOpen(false);
+        setloading(true)
 
-        const info = {name:name, spec:special, email:email, phone:phone}
-        setDataIn([info])
+        const info = {name:d_name, spec:special, email:email, phone:phone}
+        console.log(info)
 
         try {
-            const response = await axios.post('https://ehs-q3hx.onrender.com/api/addDoc',info);
-            console.log(response.data) 
+            const response = await axios.post('https://ehs-q3hx.onrender.com/api/addDoc/'+hid,info);
+            console.log(response.data)
+            setloading(false)
         } catch (error) {
             console.error(error)
+            setloading(false)
         }
 
     }
+
+    function close() {
+        setOpen(false);
+    }
+    const getDocs = async () =>{
+        //        setloading(true)
+        try {
+            const response = await axios.get('https://ehs-q3hx.onrender.com/api/fetchDR/'+id)
+            //            console.log(response.data)
+            setdata1(response.data)
+            //            setloading(false)
+        }catch (e) {
+            console.log(e)
+            //            setloading(false)
+        }
+    }
+    useEffect(()=>{
+        getDocs()
+    },[])
     
     return(
         <>
         <div className={s.whole_screen}>
             <div className={s.upar}>
-                <div className={s.title}> Bombay Hospital, Indore </div>
+                <div className={s.title}> {Hname} </div>
                 <i> <FontAwesomeIcon icon={["fa", "circle-plus",]} size={"3x"} style={{color: "#E55771",}}/> </i>
             </div>
             <div className={s.sub_upar}>
@@ -66,7 +92,6 @@ function Doc_Prof() {
                     <React.Fragment>
                         <Dialog
                             open={open}
-                            onClose={submitThis}
                             aria-labelledby="alert-dialog-title"
                             aria-describedby="alert-dialog-description"
                             >
@@ -109,11 +134,15 @@ function Doc_Prof() {
                                 <Button onClick={submitThis} autoFocus>
                                     Create
                                 </Button>
+                                <Button onClick={close} autoFocus>
+                                    Close
+                                </Button>
                             </DialogActions>
+                            { loading && <LinearProgress />}
                         </Dialog>
                     </React.Fragment>
                 </div>
-                <div className={s.title}> Diagnostic History </div>
+                <div className={s.title}>Doctor Staff</div>
             </div>
             <div className={s.side}>
                 <Sidebar/>
@@ -121,28 +150,18 @@ function Doc_Prof() {
 
             <div className={s.main_maal}>
 
-                <div className={s.card}>
-                    <span className={s.p_name} >Dr. Salunke</span>
-                    <span>Heart Surgeon</span>
-                    <span>salunke@gmail.com</span>
-                </div>
-                <div className={s.card}>
-                    <span className={s.p_name} >Dr. Salunke</span>
-                    <span>Heart Surgeon</span>
-                    <span>salunke@gmail.com</span>
-                </div>
-                <div className={s.card}>
-                    <span className={s.p_name} >Kidney Attack</span>
-                    <span>Diagnosed on:</span>
-                    <span>Diagnosed by:</span>
-                    <span>Mediactions:</span>
-                </div>
-                <div className={s.card}>
-                <span className={s.p_name} >Kidney Attack</span>
-                <span>Diagnosed on:</span>
-                <span>Diagnosed by:</span>
-                <span>Mediactions:</span>
-            </div>
+                {data1.map((item, index) => (
+
+                    <div className={s.card} key={index}>
+                        <span className={s.p_name} >{item.fullname}</span>
+                        <span>{item.speciality}</span>
+                        <span>{item.email}</span>
+                    </div>
+                    ))
+                }
+
+
+
             </div>
             
         </div>
@@ -150,4 +169,11 @@ function Doc_Prof() {
         )
 }
 
-export default Doc_Prof
+const mapStateToProps = (state) => {
+    return {
+        hid:state.data.hid,
+        id: state.data.id,
+        Hname: state.data.Hname,
+    };
+};
+export default connect(mapStateToProps, {updateData})(Doc_Prof)

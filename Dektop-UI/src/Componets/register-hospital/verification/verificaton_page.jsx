@@ -7,9 +7,19 @@ import {connect} from "react-redux";
 import {updateFormField} from "../../../redux-stuff/form_action.js";
 import axios from 'axios'
 library.add(faCircle)
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import {Backdrop} from "@mui/material";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 const Verificaton_page = ({hid, tan_no, pan, updateFormField}) =>{
+
+    const [loading, setloading] = useState(false)
+    const navigate = useNavigate()
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setloading(true)
         const info = {
             hospital_login_cred: {
                 hid: hid
@@ -23,12 +33,17 @@ const Verificaton_page = ({hid, tan_no, pan, updateFormField}) =>{
 
         console.log(info)
         try {
-            const response = await axios.post('/api/',info);
-            console.log(response.data) 
+            const response = await axios.put('https://ehs-q3hx.onrender.com/api/addHospitalGovtDetails',info);
+            console.log(response.data)
+            setloading(false)
+            navigate('/gen_pass')
         } catch (error) {
             console.error(error)
+            setloading(false)
         }
     };
+
+
     
     return <>
 
@@ -79,6 +94,13 @@ const Verificaton_page = ({hid, tan_no, pan, updateFormField}) =>{
             <button onClick={handleSubmit} >Submit</button>
         </div>
 
+        {
+        loading && (<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px'}}>
+            <Backdrop open={loading}>
+                <CircularProgress />
+            </Backdrop>
+        </Box>)
+        }
     </div>
 
     </>

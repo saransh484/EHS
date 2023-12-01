@@ -50,3 +50,9 @@
     background-color: rgba(229, 87, 113, 0.8);
 }
 
+.agalbagal{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
