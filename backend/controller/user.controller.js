@@ -645,9 +645,9 @@ exports.assignDoctor = async (req, res) => {
 
 
 exports.getCamps = async (req, res) => {
-  const pin = req.params.pin;
+  
   try {
-    const camps = await CampsModel.find({ pin: pin });
+    const camps = await CampsModel.find();
     res.status(200).send(camps);
   } catch (error) {
     res.send({ message: false });
