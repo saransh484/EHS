@@ -64,9 +64,5 @@ const hospitalSchema = new Schema({
     govt_data: govt_dataSchema,
 });
 
-
-
-
-
 const HospitalModel = db.model('hospital', hospitalSchema);
 module.exports = HospitalModel;

@@ -17,7 +17,7 @@ router.put("/addHospitalGovtDetails", UserController.addGovtDetails);
 router.put("/gendata/:id", UserController.genData);
 router.post(
   "/addReport/:id",
-  UserController.upload.fields([{ name: "reportpdf" }]),
+  UserController.upload.single('pdf'),
   UserController.addReport
 );
 router.get("/fetchUser/:id", UserController.fetchUser);
@@ -29,7 +29,7 @@ router.get("/showAllHospital", UserController.showAllHospital);
 router.post("/bookAppointment", UserController.bookAppointment);
 router.get("/fetchappointment/:id", UserController.getAppointment);
 router.get("/userfetchappointment/:id", UserController.getUserAppointment);
-router.get("/getCamps/:pin", UserController.getCamps);
+router.get("/getCamps", UserController.getCamps);
 router.post("/postAppointment/:id", UserController.postAppointment);
 
 //   "/addReport/:id",
@@ -39,12 +39,14 @@ router.post("/postAppointment/:id", UserController.postAppointment);
 
 router.get("/fetchUser/:id", UserController.fetchUser);
 router.post("/postCamp/:id", UserController.postCamp);
+router.post("/loginDoc", UserController.loginDoc);
 router.post("/addDoc/:id", UserController.addDoc);
-// router.post("/loginDoc", UserController.loginDoc);
 router.get("/fetchUHID/:id", UserController.getUHID);
-router.get("/fetchDR/:hospitalId", UserController.fetchAvailDrs); //fetch available Dr of hospital for appointment assist
+router.get("/fetchDR/:hospitalId?", UserController.fetchAvailDrs); //fetch available Dr of hospital for appointment assist
 router.put("/assignDoctor", UserController.assignDoctor); // assign Dr to a patient 
 router.get("/fetchDoctorsAppointment/:DrId", UserController.fetchDrsAppointment); //fetch appointment of a Doctor
 router.post("/addDiagnosis", UserController.AddDiagnosis); //fetch appointment of a Doctor
+router.get("/fetchPatientPrescription/:UHID", UserController.fetchPatientPrescription); //fetch appointment of a Doctor
+router.post("/addHealthHistory", UserController.AddHealthHistory); //fetch appointment of a Doctor
 
 module.exports = router;

@@ -17,6 +17,9 @@ const userSchema = new Schema({
         type: String,
         require: false,
     },
+    profilePic: {
+        type: String,
+    },
     city: {
         type: String,
         require: false,
@@ -36,7 +39,9 @@ const userSchema = new Schema({
         {
             title: String,
             fileURL: String,
-            date: String
+            date: String,
+            symptoms:String,
+
         }
     ]
 

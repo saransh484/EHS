@@ -22,18 +22,19 @@ const prescriptionSchema = new mongoose.Schema({
 
 const diagnosisSchema = new Schema({
     appointment_data: {
-        date: Date,
+        date: {
+            type: Date,
+            default: Date.now,
+        },
         appointmentId: String,
         hospital_id: String,
         doctor_id: String,
         UHID: String,
     },
-
     diagnosis_data: {
         cause: String,
         priscription: [prescriptionSchema]
     },
-
 });
 
 

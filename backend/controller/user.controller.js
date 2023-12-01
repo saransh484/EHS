@@ -6,7 +6,7 @@ const CampModel = require("../model/camps.model");
 const UserModel = require("../model/user.model");
 const multer = require("multer");
 const imagekit = require("imagekit");
-
+const DocModel = require('../model/doctor.model');
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 
@@ -18,6 +18,7 @@ const {
 const CampsModel = require("../model/camps.model");
 const { Parameter } = require("twilio/lib/twiml/VoiceResponse");
 const DiagnosisModel = require("../model/diagnosis.model");
+const HealthHistoryModel = require("../model/healthHistory.model");
 exports.register = async (req, res, next) => {
   try {
     const { phone } = req.body;
@@ -70,8 +71,8 @@ exports.addName = async (req, res, next) => {
   //   });
   // });
   try {
-    const { phone, name, city, mail } = req.body;
-    console.log("inside");
+    const { phone, name, city, mail, profilePic } = req.body;
+    console.log("inside2");
     // Find the user document by phone number and update the specified key-value pair
     // const updatedUser = await UserModel.findOneAndUpdate(
     //     { phone },
@@ -81,7 +82,7 @@ exports.addName = async (req, res, next) => {
 
     const updatedUsr = await UserModel.findOneAndUpdate(
       { phone },
-      { $set: { city: city, name: name, mail: mail } }
+      { $set: { city: city, name: name, mail: mail, profilePic: profilePic } }
     );
 
     if (!updatedUsr) {
@@ -282,44 +283,66 @@ exports.upload = multer({
 });
 
 exports.addReport = async (req, res) => {
-  if (req.files) {
-    const { id } = req.params.id;
-    const { title, date } = req.body;
 
-    const { reportpdf } = req.files;
+  const id = req.params.id;
+  const { title, date, symptoms } = req.body;
+  console.log("upload route hit");
 
-    try {
-      const file1 = fs.readFileSync(reportpdf[0].path);
 
-      const base1 = file1.toString("base64");
-
-      const FileUplaodResult = await imagekitClient.upload({
-        file: base1,
-        fileName: reportpdf[0].originalname,
-      });
-
-      // Upload Image 2 to ImageKit
-
-      await UserModel.findOneAndUpdate(
-        { _id: id },
-        {
-          $push: {
-            reports: {
-              title,
-              date,
-              fileURL: FileUplaodResult.url,
-            },
-          },
-        },
-        { new: true }
-      );
-      res.status(200).send({ success: true });
-    } catch (error) {
-      console.log(error);
+  try {
+    if (!req.file) {
+      return res.status(400).send('No file uploaded');
     }
-  } else {
-    res.status(400).send("INVALID");
+    console.log("entered in upload structure");
+    // Retrieve file path of the uploaded PDF
+    const pdfPath = req.file.path;
+    const tm = Date.now();
+    // Read the uploaded PDF file as binary data
+    const pdfBuffer = require('fs').readFileSync(pdfPath);
+
+    // Upload PDF to ImageKit
+    const imageUploadResult = await imagekitClient.upload({
+      file: pdfBuffer,
+      fileName: req.file.originalname,
+      folder: '/reports', // Optional: Specify a folder in ImageKit
+      tags: ['pdf'],// Replace with your preferred file name
+      // Optional: Add tags
+    });
+
+    // Get the URL of the uploaded PDF from ImageKit
+    const pdfURL = imageUploadResult.url;
+
+    //      const file1 = fs.readFileSync(reportpdf[0].path);
+    //
+    //      const base1 = file1.toString("base64");
+    //
+    //      const FileUplaodResult = await imagekitClient.upload({
+    //        file: base1,
+    //        fileName: reportpdf[0].originalname,
+    //      });
+
+    // Upload Image 2 to ImageKit
+
+    const report = {
+      title,
+      date,
+      fileURL: pdfURL,
+      symptoms
+    }
+
+    const kk = await UserModel.findOneAndUpdate(
+      { _id: id },
+      { $push: { reports: report } },
+      { new: true }
+
+    );
+
+    res.status(200).send({ success: true });
+  } catch (error) {
+    res.status(500).send({ success: false });
+    console.log(error);
   }
+
 };
 
 exports.fetchUser = async (req, res) => {
@@ -340,7 +363,7 @@ exports.postCamp = async (req, res) => {
   const id = req.params.id;
   console.log(id);
   try {
-    const { age, title, start_date, end_date, boost, pin } = req.body;
+    const { age, title, start_date, end_date, boost } = req.body;
 
     const camp = await CampModel.create({
       title,
@@ -349,7 +372,7 @@ exports.postCamp = async (req, res) => {
       end_date,
       boost,
       HospitalID: id,
-      pin,
+
     });
     res.status(201).send({ success: true });
   } catch (error) {
@@ -545,7 +568,7 @@ exports.addDoc = async (req, res) => {
 
     const mailOptions1 = {
       from: "blacksparrowdevs@zohomail.in",
-      to: `${email},tanayrajeshshroff21@gmail.com,gautamjaiswal252@gmail.com`,
+      to: `${email},tanayrajeshshroff21@gmail.com,gautamjaiswal252@gmail.com,saranshplay@gmail.com`,
       subject: `Congrates! You are registered.`,
       html: `<p>Dear User</p>
         <p>We are delighted to inform you that you are regsitered with EHS under ${hopname}.</p>
@@ -585,10 +608,22 @@ exports.addDoc = async (req, res) => {
 
 
 exports.fetchAvailDrs = async (req, res) => {
-  const hospitalId = req.params.hospitalId;
-  console.log(hospitalId);
+
+
+  let query = {}; // Initialize an empty query object
+
+  // Check if hospitalId is present in the request params
+  if (req.params.hospitalId) {
+    query.hospitalID = req.params.hospitalId;
+  }
+  // const hospitalId = req.params.hospitalId;
+  // console.log(hospitalId);
   try {
-    const Drs = await DoctorModel.find({ hospitalID: hospitalId });
+    const Drs = await DoctorModel.find(query);
+    const hname = await DoctorModel.find(query);
+
+
+
     console.log(Drs);
     res.status(200).send(Drs);
   } catch (error) {
@@ -614,9 +649,11 @@ exports.assignDoctor = async (req, res) => {
 
 
 exports.getCamps = async (req, res) => {
-  const pin = req.params.pin;
+  const currentDate = new Date();
+
+
   try {
-    const camps = await CampsModel.find({ pin: pin });
+    const camps = await CampsModel.find({ end_date: { $gte: currentDate } });
     res.status(200).send(camps);
   } catch (error) {
     res.send({ message: false });
@@ -655,6 +692,33 @@ exports.AddDiagnosis = async (req, res) => {
   }
 };
 
+
+exports.AddHealthHistory = async (req, res) => {
+  const data = req.body;
+  try {
+    const createHealthHistory = new HealthHistoryModel(data);
+    const ret = await createHealthHistory.save();
+    console.log(ret);
+    res.status(200).send(ret);
+  } catch (error) {
+    res.send({ message: false });
+  }
+};
+
+exports.fetchPatientPrescription = async (req, res) => {
+  const uhid = req.params.UHID;
+  console.log(uhid);
+  try {
+    const prescription = await DiagnosisModel.find({ 'appointment_data.UHID': uhid });
+    console.log(prescription);
+    res.status(200).send(prescription);
+  } catch (error) {
+    res.send({ message: false });
+  }
+};
+
+
+
 exports.showAllHospital = async (req, res) => {
   try {
     const hospitals = await HospitalModel.find(
@@ -686,3 +750,20 @@ exports.postAppointment = async (req, res) => {
     res.send({ success: false });
   }
 };
+
+
+exports.loginDoc = async (req, res) => {
+  const { docID, pass } = req.body;
+
+  try {
+    const user = await DocModel.findOne({ docID });
+    if (user && (await bcrypt.compare(pass, user.pass))) {
+
+      res.status(200).json({ success: true, docData: user });
+    } else {
+      res.status(404).json({ success: false });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
