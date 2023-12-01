@@ -283,44 +283,65 @@ exports.upload = multer({
 });
 
 exports.addReport = async (req, res) => {
-  if (req.files) {
-    const { id } = req.params.id;
+
+    const  id  = req.params.id;
     const { title, date } = req.body;
 
-    const { reportpdf } = req.files;
+
 
     try {
-      const file1 = fs.readFileSync(reportpdf[0].path);
+      if (!req.file) {
+        return res.status(400).send('No file uploaded');
+      }
 
-      const base1 = file1.toString("base64");
+      // Retrieve file path of the uploaded PDF
+      const pdfPath = req.file.path;
+      const tm = Date.now();
+      // Read the uploaded PDF file as binary data
+      const pdfBuffer = require('fs').readFileSync(pdfPath);
 
-      const FileUplaodResult = await imagekitClient.upload({
-        file: base1,
-        fileName: reportpdf[0].originalname,
+      // Upload PDF to ImageKit
+      const imageUploadResult = await imagekitClient.upload({
+        file: pdfBuffer,
+        fileName: req.file.originalname,
+        folder: '/reports', // Optional: Specify a folder in ImageKit
+        tags: ['pdf'],// Replace with your preferred file name
+        // Optional: Add tags
       });
+
+      // Get the URL of the uploaded PDF from ImageKit
+      const pdfURL = imageUploadResult.url;
+
+//      const file1 = fs.readFileSync(reportpdf[0].path);
+//
+//      const base1 = file1.toString("base64");
+//
+//      const FileUplaodResult = await imagekitClient.upload({
+//        file: base1,
+//        fileName: reportpdf[0].originalname,
+//      });
 
       // Upload Image 2 to ImageKit
 
-      await UserModel.findOneAndUpdate(
+      const report = {
+        title,
+        date,
+        fileURL:pdfURL
+      }
+
+     const kk =  await UserModel.findOneAndUpdate(
         { _id: id },
-        {
-          $push: {
-            reports: {
-              title,
-              date,
-              fileURL: FileUplaodResult.url,
-            },
-          },
-        },
+        { $push: { reports: report } },
         { new: true }
+
       );
-      res.status(200).send({ success: true });
+
+      res.status(200).send({ success: true});
     } catch (error) {
+      res.status(500).send({success:false});
       console.log(error);
     }
-  } else {
-    res.status(400).send("INVALID");
-  }
+
 };
 
 exports.fetchUser = async (req, res) => {

@@ -17,7 +17,7 @@ router.put("/addHospitalGovtDetails", UserController.addGovtDetails);
 router.put("/gendata/:id", UserController.genData);
 router.post(
   "/addReport/:id",
-  UserController.upload.fields([{ name: "reportpdf" }]),
+  UserController.upload.single('pdf'),
   UserController.addReport
 );
 router.get("/fetchUser/:id", UserController.fetchUser);
