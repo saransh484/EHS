@@ -598,6 +598,10 @@ exports.fetchAvailDrs = async (req, res) => {
   // console.log(hospitalId);
   try {
     const Drs = await DoctorModel.find(query);
+    const hname = await DoctorModel.find(query);
+
+
+
     console.log(Drs);
     res.status(200).send(Drs);
   } catch (error) {
