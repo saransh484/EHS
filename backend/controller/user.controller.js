@@ -293,7 +293,7 @@ exports.addReport = async (req, res) => {
     if (!req.file) {
       return res.status(400).send('No file uploaded');
     }
-
+    console.log("entered in upload structure");
     // Retrieve file path of the uploaded PDF
     const pdfPath = req.file.path;
     const tm = Date.now();
