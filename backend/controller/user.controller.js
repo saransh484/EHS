@@ -653,7 +653,7 @@ exports.getCamps = async (req, res) => {
 
 
   try {
-    const camps = await CampsModel.find({ end_date: { $gte: currentDate } });
+    const camps = await CampsModel.find();
     res.status(200).send(camps);
   } catch (error) {
     res.send({ message: false });
