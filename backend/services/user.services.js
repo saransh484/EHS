@@ -300,8 +300,9 @@ async function fetchUHID(params, callback) {
         // if (!_id) {
         //     throw new Error("PHONE NUMBER REQUIRED");
         // }
+        console.log(id);
         const existuser = await UserModel.findOne(
-            { id },
+            { phone: id },
         );
         console.log("updatedUsr");
         console.log(existuser);
