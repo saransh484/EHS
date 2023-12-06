@@ -494,7 +494,7 @@ exports.getUserAppointment = async (req, res, next) => {
 
 exports.getUHID = async (req, res, next) => {
   try {
-    const successRes = await UserService.fetchUHID(req.body);
+    const successRes = await UserService.fetchUHID(req.params);
     return res.status(200).send({
       status: true,
       message: "Success",
