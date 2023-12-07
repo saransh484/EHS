@@ -17,7 +17,7 @@ router.put("/addHospitalGovtDetails", UserController.addGovtDetails);
 router.put("/gendata/:id", UserController.genData);
 router.post(
   "/addReport/:id",
-  UserController.upload.single('pdf'),
+  UserController.upload.single("pdf"),
   UserController.addReport
 );
 router.get("/fetchUser/:id", UserController.fetchUser);
@@ -43,10 +43,16 @@ router.post("/loginDoc", UserController.loginDoc);
 router.post("/addDoc/:id", UserController.addDoc);
 router.get("/fetchUHID/:id", UserController.getUHID);
 router.get("/fetchDR/:hospitalId?", UserController.fetchAvailDrs); //fetch available Dr of hospital for appointment assist
-router.put("/assignDoctor", UserController.assignDoctor); // assign Dr to a patient 
-router.get("/fetchDoctorsAppointment/:DrId", UserController.fetchDrsAppointment); //fetch appointment of a Doctor
+router.put("/assignDoctor", UserController.assignDoctor); // assign Dr to a patient
+router.get(
+  "/fetchDoctorsAppointment/:DrId",
+  UserController.fetchDrsAppointment
+); //fetch appointment of a Doctor
 router.post("/addDiagnosis", UserController.AddDiagnosis); //fetch appointment of a Doctor
-router.get("/fetchPatientPrescription/:UHID", UserController.fetchPatientPrescription); //fetch appointment of a Doctor
+router.get(
+  "/fetchPatientPrescription/:UHID",
+  UserController.fetchPatientPrescription
+); //fetch appointment of a Doctor
 router.post("/addHealthHistory", UserController.AddHealthHistory); //fetch appointment of a Doctor
 
 module.exports = router;
