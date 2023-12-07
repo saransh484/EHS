@@ -494,7 +494,7 @@ exports.getUserAppointment = async (req, res, next) => {
 
 exports.getUHID = async (req, res, next) => {
   try {
-    const successRes = await UserService.fetchUHID(req.body);
+    const successRes = await UserService.fetchUHID(req.params);
     return res.status(200).send({
       status: true,
       message: "Success",
@@ -653,7 +653,7 @@ exports.getCamps = async (req, res) => {
 
 
   try {
-    const camps = await CampsModel.find({ end_date: { $gte: currentDate } });
+    const camps = await CampsModel.find();
     res.status(200).send(camps);
   } catch (error) {
     res.send({ message: false });
