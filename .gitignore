@@ -1,2 +1,8 @@
 server/node_modules
 backend/node_modules
+ehs/android/
+
+ehs/.gradle/
+ehs/.idea/
+ehs/*.iml
+ehs/build/
