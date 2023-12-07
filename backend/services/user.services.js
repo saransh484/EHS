@@ -108,6 +108,7 @@ async function registerUser(phone, callback) {
 async function FindUser(params, callback) {
     try {
         const { phone } = params;
+        console.log(phone);
         if (!phone) {
             throw new Error("PHONE NUMBER REQUIRED");
         }
