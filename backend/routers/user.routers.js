@@ -6,7 +6,7 @@ router.post("/registration", UserController.register);
 // router.post('/otpLogin', UserController.otpLogin);
 router.post("/verifyOTP", UserController.verifyOTP);
 router.put("/addname", UserController.addName);
-router.post("/findUser", UserController.FindUser);
+router.post("/findUser/:phone", UserController.FindUser);
 router.get("/getUserDetails/:phone", UserController.GetUserDetails);
 router.post("/hospitalRegister", UserController.registreHospital);
 router.post("/findHospital", UserController.FindHospital);
