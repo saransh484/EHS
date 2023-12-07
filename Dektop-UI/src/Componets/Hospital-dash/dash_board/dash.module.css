@@ -35,11 +35,12 @@ body{
 
 .two_sub_upar{
     display: flex;
+    flex-direction: column;
     background: white;
     border-radius: 15px;
-    align-items: center;
+/*    align-items: center;*/
     justify-content: space-between;
-    height: 90px;
+/*    height: 90px;*/
 }
 
 .two_sub_upar span{
@@ -47,7 +48,13 @@ body{
     font-weight: 500;
     margin-left: 1rem;
 }
+.damn{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 0.5rem;
 
+}
 .side{
     grid-row: side;
     background: white;
@@ -72,6 +79,11 @@ body{
     margin-left: 1rem;
 }
 
+.chhotu span:hover{
+    color: #9E9FA6;
+    cursor: pointer;
+}
+
 .logo_name{
     display: flex;
     flex-direction: row;
@@ -84,7 +96,7 @@ body{
     grid-column: main_maal;
     background: white;
     border-radius: 15px;
-    height: 35rem;
+/*    height: 35rem;*/
 }
 
 .title{

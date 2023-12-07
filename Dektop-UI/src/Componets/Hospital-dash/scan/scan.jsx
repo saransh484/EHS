@@ -10,12 +10,14 @@ import {useState} from "react";
 import axios from "axios";
 import {shareReducer} from "../../../redux-stuff/reducer.js";
 import {useNavigate} from "react-router-dom";
+import {updateData} from "../../../redux-stuff/form_action.js";
+import {connect} from "react-redux";
 library.add(faCirclePlus)
 
 
 
 
-function Scan_page() {
+function Scan_page({Hname}) {
     const navigate = useNavigate()
 
     const [id, setid] = useState('')
@@ -29,7 +31,7 @@ function Scan_page() {
 
         try {
             setLoading(true)
-            const response = await axios.post('/api/otp',info);
+            const response = await axios.get('https://ehs-q3hx.onrender.com/api/fetchPatientPrescription/'+id);
             console.log(response.data)
             setdata(response.data)
         } catch (error) {
@@ -39,12 +41,12 @@ function Scan_page() {
         }
     }
 
-//    if (id){
-//        console.log( id, "got id, running route")
-//        submitThis()
-//        setid('')
-//    }
     if (id){
+//        console.log( id, "got id, running route")
+        submitThis()
+        setid('')
+    }
+    if (id && data){
         navigate('/scaned_id', {state:{ id:{id}, data:{data} }})
     }
 
@@ -52,7 +54,7 @@ function Scan_page() {
         <>
         <div className={s.whole_screen}>
             <div className={s.upar}>
-                <div className={s.title}> Bombay Hospital, Indore </div>
+                <div className={s.title}> {Hname} </div>
                 <i> <FontAwesomeIcon icon={["fa", "circle-plus",]} size={"3x"} style={{color: "#E55771",}}/> </i>
             </div>
             <div className={s.sub_upar}>
@@ -87,4 +89,12 @@ function Scan_page() {
         )
 }
 
-export default Scan_page
+const mapStateToProps = (state) => {
+    return {
+        hid:state.data.hid,
+        id: state.data.id,
+        Hname: state.data.Hname,
+    };
+};
+
+export default connect(mapStateToProps, {updateData})(Scan_page)

@@ -72,6 +72,17 @@
     margin-top: 6rem;
 }
 
+.button_saveCont span{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.idpass{
+    color: red;
+}
+
 .button_saveCont button{
     cursor: pointer;
     border: none;

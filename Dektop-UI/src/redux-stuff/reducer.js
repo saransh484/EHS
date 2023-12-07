@@ -26,8 +26,8 @@ const initialState = {
 
 const share = {
     id:'',
-    data1:'',
-    data2:''
+    hid:'',
+    Hname:''
 }
 
 export const formReducer = (state = initialState, action) => {

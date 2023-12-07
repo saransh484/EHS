@@ -25,12 +25,15 @@ body{
 
 .sub_upar{
     grid-column: sub_upar;
+    display: flex;
+    flex-direction: row;
 }
 .sub_sub_upar{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+
 }
 
 .two_sub_upar{
@@ -140,4 +143,20 @@ body{
 .card span{
     padding: 4px;
     padding-left: 1rem;
+}
+.sub_upar button{
+    cursor: pointer;
+    border: none;
+    border-radius: 9px;
+    width: 160px;
+    height: 50px;
+    font-size: 17px;
+    transition: 0.3s;
+    background-color: #E55771;
+    color: white;
+    font-weight: bold;
+    margin-left: 8.5rem;
+}
+.login-button button:hover{
+    background-color: rgba(229, 87, 113, 0.8);
 }

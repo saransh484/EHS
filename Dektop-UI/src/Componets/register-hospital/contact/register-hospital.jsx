@@ -3,7 +3,7 @@ import s from './reg-hos.module.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCircle } from '@fortawesome/free-solid-svg-icons'
-import {connect} from "react-redux";
+import {connect, useDispatch} from "react-redux";
 import {updateFormField} from "../../../redux-stuff/form_action.js";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
@@ -20,6 +20,7 @@ function Hospital_reg({hid,email, tel_no, mob_no, updateFormField}) {
     const [loading, setloading] = useState(false)
     const [resp, setresp] = useState([])
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const submitThis = async (e) => {
         e.preventDefault();
         setloading(true)
@@ -30,9 +31,12 @@ function Hospital_reg({hid,email, tel_no, mob_no, updateFormField}) {
             console.log(response.data)
             setresp(response.data)
             setloading(false)
-//            next_page(response.data)
+            dispatch(updateFormField('hid', response.data.hid))
+            console.log(hid)
+            next_page(response.data)
         } catch (error) {
             console.error(error)
+            setloading(false)
         }
     }
     

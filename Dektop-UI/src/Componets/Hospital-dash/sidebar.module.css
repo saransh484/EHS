@@ -21,6 +21,11 @@
     margin-left: 1rem;
 }
 
+.chhotu span:hover{
+    color: #9E9FA6;
+    cursor: pointer;
+}
+
 .logo_name{
     display: flex;
     flex-direction: row;

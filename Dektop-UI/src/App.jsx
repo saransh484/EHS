@@ -14,7 +14,8 @@ import Doc_signin from "./Componets/Hospital-dash/Doctor/Doc_Login/doc_login.jsx
 import Doc_Prof from "./Componets/Hospital-dash/Doctor/doc_profiles/doc_profile.jsx";
 import Camp_page from "./Componets/Hospital-dash/camp/camp_page.jsx";
 import DOC_Dashboard from "./Componets/Hospital-dash/Doctor/doc_dash/doc_dash.jsx";
-
+import GenPass from "./Componets/register-hospital/verification/genPass.jsx";
+import PageNotFound from "./Componets/error.jsx";
 
 function App() {
 
@@ -27,12 +28,20 @@ function App() {
         <Route path={'/verify_otp'} element={<Admin_signup/>}/>
         <Route path={'/basic_detail'} element={<Basic_detail/>} />
         <Route path={'/verify'} element={<Verificaton_page/>}/>
+        <Route path={'/gen_pass'} element={<GenPass/>} />
 
         <Route path={'/ehs_dash'} element={<EHS_Dashboard/>}/>
         <Route path={'/scan'} element={<Scan_page/>}/>
         <Route path={'/scaned_id'} element={<Dig_History/>}/>
 
+        <Route path={'/doc_signin'} element={<Doc_signin/>}/>
         <Route path={'/doc_dash'} element={<DOC_Dashboard/>} />
+        <Route path={'/doc_prof'} element={<Doc_Prof/>} />
+
+        <Route path={'/camp'} element={<Camp_page/>}/>
+
+
+        <Route path={'*'} element={<PageNotFound/>}/>
 
       </Routes>
     </div>
