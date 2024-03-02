@@ -6,7 +6,7 @@ const CampModel = require("../model/camps.model");
 const UserModel = require("../model/user.model");
 const multer = require("multer");
 const imagekit = require("imagekit");
-const DocModel = require('../model/doctor.model');
+const DocModel = require("../model/doctor.model");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 
@@ -114,7 +114,6 @@ exports.FindUser = async (req, res, next) => {
   }
 };
 
-
 exports.GetUserDetails = async (req, res, next) => {
   try {
     console.log("in controller finduser try block");
@@ -143,7 +142,7 @@ exports.registreHospital = async (req, res, next) => {
       data: successRes,
       hid: successRes.hospital_login_cred.hid,
       mobileOTP: successRes.mobileotp,
-      mailOTP: successRes.mailotp
+      mailOTP: successRes.mailotp,
     });
   } catch (error) {
     throw error;
@@ -283,29 +282,27 @@ exports.upload = multer({
 });
 
 exports.addReport = async (req, res) => {
-
   const id = req.params.id;
   const { title, date, symptoms } = req.body;
   console.log("upload route hit");
 
-
   try {
     if (!req.file) {
-      return res.status(400).send('No file uploaded');
+      return res.status(400).send("No file uploaded");
     }
     console.log("entered in upload structure");
     // Retrieve file path of the uploaded PDF
     const pdfPath = req.file.path;
     const tm = Date.now();
     // Read the uploaded PDF file as binary data
-    const pdfBuffer = require('fs').readFileSync(pdfPath);
+    const pdfBuffer = require("fs").readFileSync(pdfPath);
 
     // Upload PDF to ImageKit
     const imageUploadResult = await imagekitClient.upload({
       file: pdfBuffer,
       fileName: req.file.originalname,
-      folder: '/reports', // Optional: Specify a folder in ImageKit
-      tags: ['pdf'],// Replace with your preferred file name
+      folder: "/reports", // Optional: Specify a folder in ImageKit
+      tags: ["pdf"], // Replace with your preferred file name
       // Optional: Add tags
     });
 
@@ -327,14 +324,13 @@ exports.addReport = async (req, res) => {
       title,
       date,
       fileURL: pdfURL,
-      symptoms
-    }
+      symptoms,
+    };
 
     const kk = await UserModel.findOneAndUpdate(
       { _id: id },
       { $push: { reports: report } },
       { new: true }
-
     );
 
     res.status(200).send({ success: true });
@@ -342,7 +338,6 @@ exports.addReport = async (req, res) => {
     res.status(500).send({ success: false });
     console.log(error);
   }
-
 };
 
 exports.fetchUser = async (req, res) => {
@@ -372,7 +367,6 @@ exports.postCamp = async (req, res) => {
       end_date,
       boost,
       HospitalID: id,
-
     });
     res.status(201).send({ success: true });
   } catch (error) {
@@ -606,10 +600,7 @@ exports.addDoc = async (req, res) => {
   }
 };
 
-
 exports.fetchAvailDrs = async (req, res) => {
-
-
   let query = {}; // Initialize an empty query object
 
   // Check if hospitalId is present in the request params
@@ -622,15 +613,12 @@ exports.fetchAvailDrs = async (req, res) => {
     const Drs = await DoctorModel.find(query);
     const hname = await DoctorModel.find(query);
 
-
-
     console.log(Drs);
     res.status(200).send(Drs);
   } catch (error) {
     res.send({ message: false });
   }
 };
-
 
 exports.assignDoctor = async (req, res) => {
   const appointmentId = req.body.appointmentId;
@@ -639,7 +627,11 @@ exports.assignDoctor = async (req, res) => {
   console.log(doctorId);
 
   try {
-    const Drs = await AppointmentModel.findOneAndUpdate({ appointmentId: appointmentId }, { $set: { 'appointment_data.doctor_id': doctorId } }, { new: true });
+    const Drs = await AppointmentModel.findOneAndUpdate(
+      { appointmentId: appointmentId },
+      { $set: { "appointment_data.doctor_id": doctorId } },
+      { new: true }
+    );
     console.log(Drs);
     res.status(200).send(Drs);
   } catch (error) {
@@ -647,10 +639,8 @@ exports.assignDoctor = async (req, res) => {
   }
 };
 
-
 exports.getCamps = async (req, res) => {
   const currentDate = new Date();
-
 
   try {
     const camps = await CampsModel.find();
@@ -664,7 +654,9 @@ exports.fetchDrsAppointment = async (req, res) => {
   const DrId = req.params.DrId;
   console.log(DrId);
   try {
-    const DrsAppointment = await AppointmentModel.find({ 'appointment_data.doctor_id': DrId });
+    const DrsAppointment = await AppointmentModel.find({
+      "appointment_data.doctor_id": DrId,
+    });
     console.log(DrsAppointment);
     res.status(200).send(DrsAppointment);
   } catch (error) {
@@ -676,22 +668,24 @@ exports.AddDiagnosis = async (req, res) => {
   const data = req.body;
   const appointId = req.body.appointment_data.appointmentId;
   try {
-
     const createDiagnosis = new DiagnosisModel(data);
     const ret = await createDiagnosis.save();
     console.log(ret);
-    const diagid = ret['_id'];
+    const diagid = ret["_id"];
     console.log("Diagnosis ID :");
     console.log(diagid);
-    const updateAppointmentWithDiagnosis = await AppointmentModel.findOneAndUpdate({ appointmentId: appointId }, { $set: { "diagnosis_data.prescription_id": diagid } }, { new: true });
-
+    const updateAppointmentWithDiagnosis =
+      await AppointmentModel.findOneAndUpdate(
+        { appointmentId: appointId },
+        { $set: { "diagnosis_data.prescription_id": diagid } },
+        { new: true }
+      );
 
     res.status(200).send(updateAppointmentWithDiagnosis);
   } catch (error) {
     res.send({ message: false });
   }
 };
-
 
 exports.AddHealthHistory = async (req, res) => {
   const data = req.body;
@@ -709,15 +703,15 @@ exports.fetchPatientPrescription = async (req, res) => {
   const uhid = req.params.UHID;
   console.log(uhid);
   try {
-    const prescription = await DiagnosisModel.find({ 'appointment_data.UHID': uhid });
+    const prescription = await DiagnosisModel.find({
+      "appointment_data.UHID": uhid,
+    });
     console.log(prescription);
     res.status(200).send(prescription);
   } catch (error) {
     res.send({ message: false });
   }
 };
-
-
 
 exports.showAllHospital = async (req, res) => {
   try {
@@ -751,14 +745,12 @@ exports.postAppointment = async (req, res) => {
   }
 };
 
-
 exports.loginDoc = async (req, res) => {
   const { docID, pass } = req.body;
 
   try {
     const user = await DocModel.findOne({ docID });
     if (user && (await bcrypt.compare(pass, user.pass))) {
-
       res.status(200).json({ success: true, docData: user });
     } else {
       res.status(404).json({ success: false });
@@ -766,4 +758,44 @@ exports.loginDoc = async (req, res) => {
   } catch (err) {
     console.log(err);
   }
-}
+};
+
+exports.addBlood = async (req, res) => {
+  let kk;
+  const { bloodGroup, isdonatedin6months, iswillingBlood } = req.body;
+  const { userid } = req.params;
+  try {
+    const user = await UserModel.findOne({ _id: userid });
+    if (isdonatedin6months) {
+      kk = 0;
+    } else {
+      kk = 1;
+    }
+    user.blood = {
+      filled: true,
+      bloodGroup: bloodGroup,
+      willing: iswillingBlood,
+      donatedLastSixMonths: isdonatedin6months,
+    };
+
+    await user.save();
+    res
+      .status(200)
+      .json({ message: "Blood details updated successfully", status: true });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.fetchBlood = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const users = await UserModel.find({
+      _id: { $ne: id },
+      "blood.willing": true,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
