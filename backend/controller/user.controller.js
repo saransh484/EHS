@@ -762,8 +762,7 @@ exports.loginDoc = async (req, res) => {
 
 exports.addBlood = async (req, res) => {
   let kk;
-  const { bloodGroup, isdonatedin6months, iswillingBlood, donateDate } =
-    req.body;
+  const { bloodGroup, isdonatedin6months, iswillingBlood } = req.body;
   const { userid } = req.params;
   try {
     const user = await UserModel.findOne({ _id: userid });
@@ -777,8 +776,6 @@ exports.addBlood = async (req, res) => {
       bloodGroup: bloodGroup,
       willing: iswillingBlood,
       donatedLastSixMonths: isdonatedin6months,
-      donateDate: donateDate,
-      available: kk,
     };
 
     await user.save();
@@ -793,30 +790,9 @@ exports.addBlood = async (req, res) => {
 exports.fetchBlood = async (req, res) => {
   const { id } = req.params;
   try {
-    const users = await UserModel.find({ _id: { $ne: id } });
-
-    // Update availability based on months difference
-    const currentDate = new Date();
-    for (const user of users) {
-      const lastDonationDate = user.blood?.donateDate;
-
-      if (lastDonationDate) {
-        const monthsDifference =
-          (currentDate - lastDonationDate) / (1000 * 60 * 60 * 24 * 30);
-        user.available = monthsDifference >= 6 ? true : false;
-      } else {
-        user.available = false; // Set available to 0 if no donation date available
-      }
-
-      await user.save();
-    }
-
-    // Fetch users with available value equal to 1
-    const eligibleUsers = await UserModel.find({ "blood.available": true });
-
-    res.json({
-      message: "Availability updated successfully",
-      users: eligibleUsers,
+    const users = await UserModel.find({
+      _id: { $ne: id },
+      "blood.willing": true,
     });
   } catch (error) {
     console.error(error);

@@ -41,8 +41,6 @@ const userSchema = new Schema({
     bloodGroup: String,
     willing: Boolean,
     donatedLastSixMonths: Boolean,
-    donateDate: Date,
-    available: Boolean,
   },
   reports: [
     {
