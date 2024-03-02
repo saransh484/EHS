@@ -761,16 +761,11 @@ exports.loginDoc = async (req, res) => {
 };
 
 exports.addBlood = async (req, res) => {
-  let kk;
   const { bloodGroup, isdonatedin6months, iswillingBlood } = req.body;
   const { userid } = req.params;
   try {
     const user = await UserModel.findOne({ _id: userid });
-    if (isdonatedin6months) {
-      kk = 0;
-    } else {
-      kk = 1;
-    }
+
     user.blood = {
       filled: true,
       bloodGroup: bloodGroup,
