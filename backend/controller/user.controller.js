@@ -803,16 +803,16 @@ exports.fetchBlood = async (req, res) => {
       if (lastDonationDate) {
         const monthsDifference =
           (currentDate - lastDonationDate) / (1000 * 60 * 60 * 24 * 30);
-        user.available = monthsDifference >= 6 ? 1 : 0;
+        user.available = monthsDifference >= 6 ? true : false;
       } else {
-        user.available = 0; // Set available to 0 if no donation date available
+        user.available = false; // Set available to 0 if no donation date available
       }
 
       await user.save();
     }
 
     // Fetch users with available value equal to 1
-    const eligibleUsers = await UserModel.find({ available: 1 });
+    const eligibleUsers = await UserModel.find({ "blood.available": true });
 
     res.json({
       message: "Availability updated successfully",
