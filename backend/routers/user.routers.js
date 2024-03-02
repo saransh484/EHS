@@ -54,5 +54,6 @@ router.get(
   UserController.fetchPatientPrescription
 ); //fetch appointment of a Doctor
 router.post("/addHealthHistory", UserController.AddHealthHistory); //fetch appointment of a Doctor
-
+router.post("/addblood/:userid", UserController.addBlood);
+router.get("/fetchBlood/:id", UserController.fetchBlood);
 module.exports = router;
