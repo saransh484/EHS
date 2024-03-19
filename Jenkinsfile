@@ -18,7 +18,7 @@ pipeline {
             steps{
                 // echo "${current_status}"
                 echo "Starting SonarQube"
-                sonarqubeInt()
+                sonarqubeInt('sonar_ehs')
             }
         }
     }
