@@ -8,17 +8,15 @@ pipeline {
 
         stage("env test"){
             steps{
-                echo "current stats = ${current_status} and merged status = ${merged}"
+                // echo "current stats = ${current_status} and merged status = ${merged}"
+                echo "skipped"
             }
         }
 
         stage('SonarQube Analysis') {
             
-            when {
-                  expression { return current_status == "opened" && merged == "false" }
-              }
             steps{
-                echo "${current_status}"
+                // echo "${current_status}"
                 echo "Starting SonarQube"
                 sonarqubeInt()
             }
