@@ -1,6 +1,6 @@
 # ehs
 
-A new Flutter project.
+EHS Flutter project.
 
 ## Getting Started
 
